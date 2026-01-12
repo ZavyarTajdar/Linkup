@@ -43,7 +43,6 @@ coverage/
 
 # Temporary files
 tmp/
-temp/
 
 # Uploads (if storing locally)
 uploads/
