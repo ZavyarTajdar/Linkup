@@ -1,0 +1,35 @@
+{
+  "name": "linkup",
+  "version": "1.0.0",
+  "description": "Linkup is a **scalable, secure, and production-ready backend API** built with **Node.js and TypeScript**. It follows clean architecture principles and modern backend best practices to support real-world web applications.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZavyarTajdar/Linkup.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZavyarTajdar/Linkup/issues"
+  },
+  "homepage": "https://github.com/ZavyarTajdar/Linkup#readme",
+  "devDependencies": {
+    "@types/node": "^25.0.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.0.0",
+    "mongoose": "^9.1.3",
+    "nodemon": "^3.1.11"
+  }
+}
