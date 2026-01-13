@@ -16,3 +16,37 @@ npx tsc --init
 }
 
 npm i -D ts-node
+
+TS Configuration
+
+{
+  "compilerOptions": {
+    /* Project Structure */
+    "rootDir": "src",
+    "outDir": "dist",
+
+    /* Runtime */
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+
+    /* Interop (NO MORE ERRORS LIKE dotenv, jwt, bcrypt) */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Strictness (Safe but not annoying) */
+    "strict": true,
+    "noImplicitAny": false,
+
+    /* Node Environment */
+    "types": ["node"],
+
+    /* Quality of Life */
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
