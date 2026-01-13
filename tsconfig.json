@@ -1,17 +1,31 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-    // File Layout
+    /* Project Structure */
     "rootDir": "src",
     "outDir": "dist",
 
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
+    /* Runtime */
+    "target": "es2020",
     "module": "commonjs",
-    "target": "es6",
-    "types": [],
-    
+    "moduleResolution": "node",
+
+    /* Interop (NO MORE ERRORS LIKE dotenv, jwt, bcrypt) */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Strictness (Safe but not annoying) */
     "strict": true,
+    "noImplicitAny": false,
+
+    /* Node Environment */
+    "types": ["node"],
+
+    /* Quality of Life */
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-  }
+    "forceConsistentCasingInFileNames": true
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
