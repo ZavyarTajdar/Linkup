@@ -7,7 +7,6 @@ const userSchema = new Schema<IUser>(
     {
         nickname: {
             type: String,
-            // required: true,
             trim: true,
         },
 
@@ -63,6 +62,12 @@ const userSchema = new Schema<IUser>(
             type: String,
         },
 
+        authProvider: {
+            type: String,
+            enum: ["local", "google"],
+            default: "local",
+        },
+
         role: {
             type: String,
             enum: ["admin", "creator", "user"],
@@ -78,11 +83,13 @@ const userSchema = new Schema<IUser>(
     { timestamps: true },
 );
 
-userSchema.pre<IUser>("save", async function () {
-    if (!this.isModified("password")) return;
+userSchema.pre("save", async function () {
+  if (!this.password) return;
+  if (!this.isModified("password")) return;
 
-    this.password = bcrypt.hashSync(this.password, 10);
+  this.password = bcrypt.hashSync(this.password, 10);
 });
+
 
 userSchema.methods.isPasswordCorrect = async function (password: string) {
     return bcrypt.compare(password, this.password);
@@ -120,4 +127,4 @@ userSchema.methods.generateAccessToken = function (this: IUser) {
 
 const User = model<IUser>("User", userSchema);
 
-export { User, IUser };
+export { User };
