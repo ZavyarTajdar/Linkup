@@ -1,7 +1,6 @@
 import express, { Express } from 'express';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
-import passport from "passport";
 
 const app: Express = express();
 
