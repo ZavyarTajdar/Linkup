@@ -27,10 +27,10 @@ export const generateAcessAndRefreshToken = async (userId: string) => {
 }
 
 const registerUser = asyncHandler(async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, nickname } = req.body;
 
-    if (!username || !email || !password) {
-        throw new ApiError(400, 'Username, email, and password are required');
+    if (!username || !email || !password || !nickname) {
+        throw new ApiError(400, 'Username, email, nickname and password are required');
     }
 
     const existingUser = await User.findOne({ email });
@@ -38,15 +38,35 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(409, 'Email is already registered');
     }
 
+    const profileImagelocalPath = (req.files as { [fieldname: string]: Express.Multer.File[] })?.profileImg?.[0]?.path
+
+    if (!profileImagelocalPath) {
+        throw new ApiError(400, "Profile image is required");
+    }
+    
+    const profileImage = await UploadOnCloudinary(profileImagelocalPath)
+    
+    if (!profileImage?.url) {
+        throw new ApiError(400, "Failed to upload on cloudinary")
+    }
+    
     const newUser = await User.create({
         username,
         email,
+        nickname,
         password,
+        profileImg: profileImage.url
     })
+
+    const user = await User.findById(newUser._id).select("-password -refreshToken")
+
+    if (!user) {
+        throw new ApiError(500, "Something Went Wrong While Fetching User");
+    }
 
     return res
         .status(201)
-        .json(new ApiResponse(200, 'User registered successfully', newUser));
+        .json(new ApiResponse(200, 'User registered successfully', user));
 })
 
 const loginUser = asyncHandler(async (req: Request, res: Response) => {
@@ -121,5 +141,6 @@ const logoutUser = asyncHandler(async (req: Request, res: Response) => {
 })
 export {
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 };

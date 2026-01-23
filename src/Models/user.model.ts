@@ -8,6 +8,7 @@ const userSchema = new Schema<IUser>(
         nickname: {
             type: String,
             trim: true,
+            required : true
         },
 
         phone: {
