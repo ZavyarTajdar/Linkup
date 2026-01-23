@@ -26,7 +26,7 @@ export const generateAcessAndRefreshToken = async (userId: string) => {
     }
 }
 
-const registerUser = asyncHandler(async (req : Request, res : Response) => {
+const registerUser = asyncHandler(async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -45,18 +45,18 @@ const registerUser = asyncHandler(async (req : Request, res : Response) => {
     })
 
     return res
-    .status(201)
-    .json(new ApiResponse(200, 'User registered successfully', newUser));
+        .status(201)
+        .json(new ApiResponse(200, 'User registered successfully', newUser));
 })
 
-const loginUser = asyncHandler(async(req: Request, res: Response) => {
+const loginUser = asyncHandler(async (req: Request, res: Response) => {
     const { username, password } = req.body
 
     if (!(username && password)) {
         throw new ApiError(400, "username and password is required")
     }
 
-    const user = await User.findOne({username: username}).select('+password')
+    const user = await User.findOne({ username: username }).select('+password')
 
     if (!user) {
         throw new ApiError(400, "password or username is not vaild")
@@ -78,15 +78,48 @@ const loginUser = asyncHandler(async(req: Request, res: Response) => {
     }
 
     return res
-    .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
-    .json( 
-        new ApiResponse(200, 'User Login successfully', { user: loggedInUser, accessToken, refreshToken })
-    )
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new ApiResponse(200, 'User Login successfully', { user: loggedInUser, accessToken, refreshToken })
+        )
 })
 
-export { 
+const logoutUser = asyncHandler(async (req: Request, res: Response) => {
+    if (!req.user) {
+        throw new ApiError(401, "Unauthorized");
+    }
+    const user = await User.findByIdAndUpdate(
+        req.user._id, 
+        {
+            $unset: {
+                refreshToken: 1
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    if (!user) {
+        throw new ApiError(400, 'User is not logged in')
+    }
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(
+            new ApiResponse(200, "User Logged Out Successfully", {})
+        )
+})
+export {
     registerUser,
     loginUser
 };
