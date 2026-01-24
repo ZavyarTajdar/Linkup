@@ -210,11 +210,23 @@ const updateProfileImage = asyncHandler(async(req, res) => {
     );
 })
 
+const getUserProfile = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+    const user = await User.findById(userId).select('-password -refreshToken');
+
+    if (!user) {
+        throw new ApiError(404, 'User not found');
+    }
+    return res.status(200).json(
+        new ApiResponse(200, 'User profile fetched successfully', user)
+    );
+});
 
 export {
     registerUser,
     loginUser,
     logoutUser,
     updateUserCredentials,
-    updateProfileImage
+    updateProfileImage,
+    getUserProfile
 };
