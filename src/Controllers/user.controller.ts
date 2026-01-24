@@ -138,8 +138,83 @@ const logoutUser = asyncHandler(async (req, res) => {
             new ApiResponse(200, "User Logged Out Successfully", {})
         )
 })
+
+const updateUserCredentials = asyncHandler(async (req, res) => {
+    const { username, email, nickname, oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (!username && !email && !nickname && !oldPassword) {
+        throw new ApiError(400, "Update at least one field");
+    }
+
+    const user = await User.findById(req.user?._id).select("+password");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    if (oldPassword) {
+        const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+
+        if (!isPasswordCorrect) {
+            throw new ApiError(400, "Old password is incorrect");
+        }
+
+        if (!newPassword || !confirmPassword) {
+            throw new ApiError(400, "New password and confirm password are required");
+        }
+
+        if (newPassword !== confirmPassword) {
+            throw new ApiError(400, "New password must match confirm password");
+        }
+
+        user.password = newPassword; 
+    }
+
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (nickname) user.nickname = nickname;
+
+    await user.save();
+
+    user.password = undefined;
+
+    return res.status(200).json(
+        new ApiResponse(200, "User credentials updated successfully", user)
+    );
+});
+
+const updateProfileImage = asyncHandler(async(req, res) => {
+    const user = await User.findById(req.user._id)
+
+    if (!user) {
+        throw new ApiError(400, "User is not Logged In")
+    }
+
+    const imageLocalPath = req.files?.profileImage[0].path
+
+    if (!imageLocalPath) {
+        throw new ApiError(400, "Image Is Required")
+    }
+
+    const profileImage = await UploadOnCloudinary(imageLocalPath)
+
+    if (!profileImage) {
+        throw new ApiError(400, "Failed To Upload On Cloudinary")
+    }
+
+    user.profileImg = profileImage.url
+    await user.save()
+
+    return res.status(200).json(
+        new ApiResponse(200, "User ProfileImage updated successfully", user)
+    );
+})
+
+
 export {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    updateUserCredentials,
+    updateProfileImage
 };
