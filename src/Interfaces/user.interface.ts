@@ -9,9 +9,6 @@ interface IUser {
 
     password?: string; // optional now
 
-    googleId?: string;
-    authProvider: "local" | "google";
-
     profileImg: string;
 
     commentPost: string[];

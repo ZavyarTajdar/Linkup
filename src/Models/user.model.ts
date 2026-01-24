@@ -22,7 +22,7 @@ const userSchema = new Schema<IUser>(
             trim: true,
             lowercase: true,
         },
-
+        
         username: {
             type: String,
             required: true,
@@ -61,12 +61,6 @@ const userSchema = new Schema<IUser>(
 
         refreshToken: {
             type: String,
-        },
-
-        authProvider: {
-            type: String,
-            enum: ["local", "google"],
-            default: "local",
         },
 
         role: {

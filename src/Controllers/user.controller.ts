@@ -7,6 +7,8 @@ import { ApiResponse } from '../Utils/apiResponse';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
+import { AuthRequest } from '../types/auth_request';
+
 
 export const generateAcessAndRefreshToken = async (userId: string) => {
     try {
@@ -26,7 +28,7 @@ export const generateAcessAndRefreshToken = async (userId: string) => {
     }
 }
 
-const registerUser = asyncHandler(async (req: Request, res: Response) => {
+const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password, nickname } = req.body;
 
     if (!username || !email || !password || !nickname) {
@@ -38,7 +40,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(409, 'Email is already registered');
     }
 
-    const profileImagelocalPath = (req.files as { [fieldname: string]: Express.Multer.File[] })?.profileImg?.[0]?.path
+    const profileImagelocalPath = req.files?.profileImg[0]?.path
 
     if (!profileImagelocalPath) {
         throw new ApiError(400, "Profile image is required");
@@ -69,7 +71,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
         .json(new ApiResponse(200, 'User registered successfully', user));
 })
 
-const loginUser = asyncHandler(async (req: Request, res: Response) => {
+const loginUser = asyncHandler(async (req, res) => {
     const { username, password } = req.body
 
     if (!(username && password)) {
@@ -106,12 +108,9 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
         )
 })
 
-const logoutUser = asyncHandler(async (req: Request, res: Response) => {
-    if (!req.user) {
-        throw new ApiError(401, "Unauthorized");
-    }
+const logoutUser = asyncHandler(async (req, res) => {
     const user = await User.findByIdAndUpdate(
-        req.user._id, 
+        req.user?._id, 
         {
             $unset: {
                 refreshToken: 1
