@@ -14,6 +14,8 @@ interface IUser {
     commentPost: string[];
     likePost: string[];
     savedPost: string[];
+    followers: string[];
+    followings: string[];
 
     refreshToken?: string;
     role: string;
