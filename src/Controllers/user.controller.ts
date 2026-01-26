@@ -9,6 +9,8 @@ import {
     updateUserCredentialsService,
     updateProfileImageService,
     getUserProfileService,
+    refreshAccessTokenService,
+    deleteUserService,
 } from "../Services/user.service";
 
 import { AuthRequest } from "../Types/auth_request";
@@ -114,4 +116,44 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     const user = await getUserProfileService(req.user!._id);
 
     return res.json(new ApiResponse(200, "Profile fetched successfully", user));
+});
+
+// ================= REFRESH ACCESS TOKEN =================
+
+export const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incommingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
+    if (!incommingRefreshToken) {
+        throw new ApiError(400, "Refresh token is required");
+    }
+
+    const { accessToken, refreshToken } = await refreshAccessTokenService(incommingRefreshToken);
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    };
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(
+            new ApiResponse(200, "Access token refreshed successfully", {
+                accessToken,
+                refreshToken,
+            }),
+        );
+})
+
+export const deleteUserAccount = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+    if (!userId) {
+        throw new ApiError(400, "User ID is required");
+    }
+
+    await deleteUserService(userId);
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, "User deleted successfully", {}));
 });

@@ -1,7 +1,7 @@
 import { User } from '../Models/user.model';
 import { ApiError } from '../Utils/apiError';
 import { UploadOnCloudinary } from '../Utils/cloudinary';
-
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 export const generateAccessAndRefreshTokenService = async (userId: string) => {
     const user = await User.findById(userId);
 
@@ -155,4 +155,46 @@ export const getUserProfileService = async (userId: string) => {
     }
 
     return user;
+
 };
+
+// ================= REFRESH ACCESS TOKEN =================
+
+export const refreshAccessTokenService = async (incommingRefreshToken: string) => {
+    try {
+        const decodedUser = jwt.verify(incommingRefreshToken, process.env.REFRESH_TOKEN_SECRET as Secret ) as JwtPayload;
+        const user = await User.findById(decodedUser?._id).select("+refreshToken");
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        if(incommingRefreshToken !== user.refreshToken){
+            throw new ApiError(400, "Token Mismatched!")
+        }
+
+        const { refreshToken, accessToken } = await generateAccessAndRefreshTokenService(user._id)
+
+        return { refreshToken, accessToken };
+    } catch (error : any) {
+        if (error.name === "TokenExpiredError") {
+            throw new ApiError(401, "Refresh Token Expired, Please Login Again");
+        } else {
+            throw new ApiError(401, "Invalid Refresh Token, Please Login Again");
+        }
+    }
+}
+
+// ================= DELETE USER =================
+export const deleteUserService = async (userId: string) => {
+    try {
+        const user = await User.findByIdAndDelete(userId);
+    
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+        return;
+    } catch (error : any) {
+        throw new ApiError(500, "Failed to delete user");
+    }
+}
