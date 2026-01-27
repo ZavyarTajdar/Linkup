@@ -13,7 +13,6 @@ import {
     deleteUserService,
 } from "../Services/user.service";
 
-import { AuthRequest } from "../Types/auth_request";
 
 // ================= REGISTER =================
 
