@@ -2,6 +2,8 @@ import { User } from '../Models/user.model';
 import { ApiError } from '../Utils/apiError';
 import { UploadOnCloudinary } from '../Utils/cloudinary';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+
+
 export const generateAccessAndRefreshTokenService = async (userId: string) => {
     const user = await User.findById(userId);
 
