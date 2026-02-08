@@ -1,12 +1,12 @@
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 
-export interface IPost extends Document {
+export interface IPost {
     owner: Types.ObjectId;
     title: string;
     description: string;
     thumbnail: string;
-    pictures: string[];
-    videos?: string[];
+    content: string[];
+    
     views: number;
     likes: Types.ObjectId[];
     comments: Types.ObjectId[];

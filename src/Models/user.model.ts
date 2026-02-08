@@ -75,6 +75,16 @@ const userSchema = new Schema<IUser>(
                 ref: "Post",
             },
         ],
+
+        followers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
+
+        followings: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
     },
     { timestamps: true },
 );

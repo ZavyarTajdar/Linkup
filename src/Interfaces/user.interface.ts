@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 interface IUser {
     _id: string;
 
@@ -11,15 +13,15 @@ interface IUser {
 
     profileImg: string;
 
-    commentPost: string[];
-    likePost: string[];
-    savedPost: string[];
-    followers: string[];
-    followings: string[];
+    commentPost: Types.ObjectId[];
+    likePost: Types.ObjectId[];
+    savedPost: Types.ObjectId[];
+    followers: Types.ObjectId[];
+    followings: Types.ObjectId[];
 
     refreshToken?: string;
     role: string;
-    post: string[];
+    post: Types.ObjectId[];
 
     createdAt: Date;
     updatedAt: Date;

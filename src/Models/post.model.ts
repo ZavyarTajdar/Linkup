@@ -21,14 +21,10 @@ const PostSchema = new Schema<IPost>(
         },
         thumbnail: {
             type: String,
-            required: true
         },
-        pictures: [{
+        content: [{
             type: String,
             required: true
-        }],
-        videos: [{
-            type: String
         }],
         views: {
             type: Number,
