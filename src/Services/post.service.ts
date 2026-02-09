@@ -25,7 +25,7 @@ const createPostService = async (data: {
         owner,
         title,
         description,
-        thumbnail: uploadedThumbnail?.url,
+        thumbnail: uploadedThumbnail?.url || uploadContent[0]?.url,
         content: uploadContent.map(upload => upload?.url) as string[]  
     });
 

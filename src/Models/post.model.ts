@@ -21,6 +21,7 @@ const PostSchema = new Schema<IPost>(
         },
         thumbnail: {
             type: String,
+            required : true        
         },
         content: [{
             type: String,
