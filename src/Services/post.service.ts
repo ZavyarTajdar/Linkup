@@ -26,10 +26,32 @@ const createPostService = async (data: {
         title,
         description,
         thumbnail: uploadedThumbnail?.url || uploadContent[0]?.url,
-        content: uploadContent.map(upload => upload?.url) as string[]  
+        content: uploadContent.map(upload => upload?.url) as string[]
     });
 
     return post;
 };
 
-export { createPostService };
+const updatePostService = async (data: {
+    title: string;
+    description: string;
+    thumbnail?: string;
+}) => {
+    const { title, description, thumbnail } = data
+
+    const uploadedThumbnail = thumbnail ? await UploadOnCloudinary(thumbnail) : null;
+
+    const post = await Post.findByIdAndUpdate(
+        {
+            title,
+            description,
+            thumbnail: uploadedThumbnail?.url
+        },
+        { 
+            new: true 
+        }
+    );
+    return post;
+}
+
+export { createPostService, updatePostService };

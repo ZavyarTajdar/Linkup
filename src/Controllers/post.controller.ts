@@ -1,7 +1,7 @@
 import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
-import { createPostService } from "../Services/post.service";
+import { createPostService, updatePostService } from "../Services/post.service";
 
 
 const createPost = asyncHandler(async (req, res) => {
@@ -19,4 +19,13 @@ const createPost = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse(201, "Post created successfully", post));
 });
 
-export { createPost };
+const updatePost = asyncHandler(async(req, res) => {
+    const { title, description, thumbnail } = req.body;
+
+    const thumbnailPath = req.files?.thumbnail ? (req.files.thumbnail as Express.Multer.File[])[0].path : undefined;
+    const post = await updatePostService({ title, description, thumbnail: thumbnailPath });
+
+    res.status(200).json(new ApiResponse(200, "Post updated successfully", post));
+})
+
+export { createPost, updatePost };
