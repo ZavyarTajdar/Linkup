@@ -54,23 +54,5 @@ const updatePostService = async (data: {
     return post;
 }
 
-const getAllPostsService = async ({ page = 1, limit = 10 }) => {
-    const skip = (page - 1) * limit;
-    const [posts, countPost] = await Promise.all([
-        Post.find()
-            .populate("owner", "username nickname")
-            .populate("likes", "likedby")
-            .populate("comments", "content commentedby")
-            .lean(),
-        Post.countDocuments()
-    ]);
 
-    return {
-        posts,
-        countPost,
-        totalPages: Math.ceil(countPost / limit),
-        currentPage: page
-    };
-}
-
-export { createPostService, updatePostService, getAllPostsService };
+export { createPostService, updatePostService };

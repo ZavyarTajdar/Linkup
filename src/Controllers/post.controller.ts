@@ -1,8 +1,8 @@
 import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
-import { createPostService, updatePostService, getAllPostsService } from "../Services/post.service";
-
+import { createPostService, updatePostService } from "../Services/post.service";
+import { Post } from "../Models/post.model";
 
 const createPost = asyncHandler(async (req, res) => {
     const { title, description, thumbnail } = req.body;
@@ -27,15 +27,11 @@ const updatePost = asyncHandler(async(req, res) => {
 
     res.status(200).json(new ApiResponse(200, "Post updated successfully", post));
 })
-
+// todo : finishing rhti hai  
 const getAllPosts = asyncHandler(async (req, res) => {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const data = await getAllPostsService({ page, limit });
-
-    res
-      .status(200)
-      .json(new ApiResponse(200, "Posts retrieved successfully", data));
+    const posts = await Post.find()
+        .populate("owner", "username nickname")
+    res.status(200).json(new ApiResponse(200, "Posts retrieved successfully", posts));
 });
 
 export { createPost, updatePost, getAllPosts };
