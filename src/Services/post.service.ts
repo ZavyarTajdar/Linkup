@@ -54,4 +54,9 @@ const updatePostService = async (data: {
     return post;
 }
 
-export { createPostService, updatePostService };
+const getAllPostsService = async () => {
+    const posts = await Post.find().populate("owner", "username nickname");
+    return posts;
+}
+
+export { createPostService, updatePostService, getAllPostsService };

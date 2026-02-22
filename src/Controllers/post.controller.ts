@@ -28,4 +28,8 @@ const updatePost = asyncHandler(async(req, res) => {
     res.status(200).json(new ApiResponse(200, "Post updated successfully", post));
 })
 
-export { createPost, updatePost };
+const getAllPosts = asyncHandler(async (req, res) => {
+
+})
+
+export { createPost, updatePost, getAllPosts };
