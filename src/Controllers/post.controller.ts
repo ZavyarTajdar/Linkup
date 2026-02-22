@@ -1,7 +1,7 @@
 import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
-import { createPostService, updatePostService } from "../Services/post.service";
+import { createPostService, updatePostService, getAllPostsService } from "../Services/post.service";
 
 
 const createPost = asyncHandler(async (req, res) => {
@@ -29,7 +29,13 @@ const updatePost = asyncHandler(async(req, res) => {
 })
 
 const getAllPosts = asyncHandler(async (req, res) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const data = await getAllPostsService({ page, limit });
 
-})
+    res
+      .status(200)
+      .json(new ApiResponse(200, "Posts retrieved successfully", data));
+});
 
 export { createPost, updatePost, getAllPosts };
