@@ -18,6 +18,11 @@ interface IUser {
     savedPost: Types.ObjectId[];
     followers: Types.ObjectId[];
     followings: Types.ObjectId[];
+    isBlocked: boolean;
+    isFollowed: boolean;
+    profilePrivacy: "public" | "private";
+    followersCount: number;
+    followingsCount: number;
 
     refreshToken?: string;
     role: string;

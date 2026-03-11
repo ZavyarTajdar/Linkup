@@ -85,6 +85,33 @@ const userSchema = new Schema<IUser>(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         }],
+
+        isBlocked: {
+            type: Boolean,
+            default: false,
+        },
+
+        isFollowed: {
+            type: Boolean,
+            default: false,
+        },
+
+        profilePrivacy: {
+            type: String,
+            enum: ["public", "private"],
+            default: "private",
+        },
+
+        followersCount: {
+            type: Number,
+            default: 0,
+        },
+
+        followingsCount: {
+            type: Number,
+            default: 0,
+        },
+        
     },
     { timestamps: true },
 );
