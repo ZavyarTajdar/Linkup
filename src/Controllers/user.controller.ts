@@ -2,6 +2,7 @@ import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
 
+
 import {
     registerUserService,
     loginUserService,
@@ -11,7 +12,9 @@ import {
     getUserProfileService,
     refreshAccessTokenService,
     deleteUserService,
+    searchUserService
 } from "../Services/user.service";
+import { User } from "../Models/user.model";
 
 
 // ================= REGISTER =================
@@ -51,7 +54,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Username and password required");
     }
 
-    const user = await loginUserService(username, password);
+    const user = await loginUserService(username, password)
 
     const { accessToken, refreshToken } =
         await generateAccessAndRefreshTokenService(user._id);
@@ -69,7 +72,7 @@ export const loginUser = asyncHandler(async (req, res) => {
             new ApiResponse(200, "Login successful", {
                 user,
                 accessToken,
-                refreshToken,
+                refreshToken
             }),
         );
 });
@@ -156,3 +159,39 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "User deleted successfully", {}));
 });
+
+export const searchUser = asyncHandler(async (req, res) => {
+    const { q } = req.query
+
+    if (typeof q !== "string") {
+        throw new ApiError(400, "Invalid search query")
+    }
+
+    const users = await searchUserService(q)
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, "User Fetched Successfully", users)
+    )
+})
+
+export const searchById = asyncHandler(async(req, res) => {
+    const { userId } = req.params
+
+    if (!userId) {
+        throw new ApiError(404, "Enter ID Correctly")
+    }
+
+    const user = await User.findById(userId).select('-refreshToken')
+
+    if (!user) {
+        throw new ApiError(404, "User Doesn't Exist")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, "User Fetched Successfully", user)
+    )
+})

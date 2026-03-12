@@ -200,3 +200,19 @@ export const deleteUserService = async (userId: string) => {
         throw new ApiError(500, "Failed to delete user");
     }
 }
+
+export const searchUserService = async (search: string) => {
+
+    if (!search) {
+        throw new ApiError(400, "Enter name!");
+    }
+
+    const users = await User.find({
+        $or: [
+            { username: { $regex: `^${search}`, $options: "i" } },
+            { nickname: { $regex: `^${search}`, $options: "i" } }
+        ]
+    }).select("username nickname profilePicture");
+
+    return users;
+};
