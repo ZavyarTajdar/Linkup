@@ -19,7 +19,6 @@ interface IUser {
     followers: Types.ObjectId[];
     followings: Types.ObjectId[];
     isBlocked: boolean;
-    isFollowed: boolean;
     profilePrivacy: "public" | "private";
     followersCount: number;
     followingsCount: number;

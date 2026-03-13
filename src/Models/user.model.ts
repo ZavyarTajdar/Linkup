@@ -92,11 +92,6 @@ const userSchema = new Schema<IUser>(
             default: false,
         },
 
-        isFollowed: {
-            type: Boolean,
-            default: false,
-        },
-
         profilePrivacy: {
             type: String,
             enum: ["public", "private"],

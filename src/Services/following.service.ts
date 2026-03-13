@@ -37,3 +37,33 @@ export const followUserService = async (
     };
 };
 
+export const unfollowUserService = async (
+    userId: Types.ObjectId,
+    followingId: Types.ObjectId
+) => {
+
+    const user = await User.findById(userId);
+    const following = await User.findById(followingId);
+
+    if (!user || !following) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const isFollowing = user.followings.map(id => id.equals(followingId))
+
+    if (!isFollowing) {
+        throw new ApiError(400, "You are not following this user");
+    }
+
+    await User.updateOne({ _id: userId.toString() }, { $inc: { followingsCount: -1 } });
+    await User.updateOne({ _id: followingId.toString() }, { $inc: { followersCount: -1 } });
+
+    await following.save();
+    await user.save();
+
+    return {
+        message: "Unfollowed successfully",
+        followersCount: following.followersCount,
+        followingsCount: user.followingsCount
+    };
+}
