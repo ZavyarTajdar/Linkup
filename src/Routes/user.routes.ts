@@ -9,7 +9,8 @@ import {
     refreshAccessToken, 
     deleteUserAccount,
     searchById,
-    searchUser
+    searchUser,
+    getFollowers
 } from "../Controllers/user.controller";
 import { upload } from "../Middleware/multer.middleware";
 import { verifyJWT } from "../Middleware/auth.middleware";
@@ -26,6 +27,7 @@ router.post('/refresh-token', verifyJWT,refreshAccessToken);
 router.delete('/delete-account', verifyJWT, deleteUserAccount);
 router.get('/searchUser', verifyJWT, searchUser);
 router.get('/searchById/:id', verifyJWT, searchById);
+router.get('/getfollowers', verifyJWT, getFollowers);
 
 
 export { router as userRoutes };

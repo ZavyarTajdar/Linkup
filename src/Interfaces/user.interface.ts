@@ -4,7 +4,7 @@ interface IUser {
     _id: string;
 
     nickname: string;
-    phone?: number;
+    phone?: string;
 
     email: string;
     username: string;

@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { User } from '../Models/user.model';
 import { ApiError } from '../Utils/apiError';
 import { UploadOnCloudinary } from '../Utils/cloudinary';
@@ -215,4 +216,16 @@ export const searchUserService = async (search: string) => {
     }).select("username nickname profilePicture");
 
     return users;
+};
+
+export const getFollowersService = async (userId: Types.ObjectId) => {
+
+    const user = await User.findById(userId)
+        .populate("followers", "username nickname profileImg");
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return user.followers;
 };

@@ -16,7 +16,7 @@ const createPost = asyncHandler(async (req, res) => {
     const thumbnailPath = req.files?.thumbnail ? (req.files.thumbnail as Express.Multer.File[])[0].path : undefined;
     const post = await createPostService({ owner, title, description, thumbnail: thumbnailPath, content });
 
-    res.status(201).json(new ApiResponse(201, "Post created successfully", post));
+    res.status(201).json(new ApiResponse(201, post, "Post created successfully"));
 });
 
 const updatePost = asyncHandler(async(req, res) => {
@@ -25,13 +25,13 @@ const updatePost = asyncHandler(async(req, res) => {
     const thumbnailPath = req.files?.thumbnail ? (req.files.thumbnail as Express.Multer.File[])[0].path : undefined;
     const post = await updatePostService({ title, description, thumbnail: thumbnailPath });
 
-    res.status(200).json(new ApiResponse(200, "Post updated successfully", post));
+    res.status(200).json(new ApiResponse(200, post, "Post updated successfully"));
 })
 // todo : finishing rhti hai  
 const getAllPosts = asyncHandler(async (req, res) => {
     const posts = await Post.find()
         .populate("owner", "username nickname")
-    res.status(200).json(new ApiResponse(200, "Posts retrieved successfully", posts));
+    res.status(200).json(new ApiResponse(200, posts, "Posts retrieved successfully"));
 });
 
 export { createPost, updatePost, getAllPosts };

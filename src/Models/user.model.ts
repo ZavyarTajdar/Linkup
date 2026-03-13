@@ -12,7 +12,8 @@ const userSchema = new Schema<IUser>(
         },
 
         phone: {
-            type: Number,
+            type: String,
+            trim: true
         },
 
         email: {

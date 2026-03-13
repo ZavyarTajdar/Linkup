@@ -36,3 +36,4 @@ export const followUserService = async (
         message: "User followed successfully"
     };
 };
+

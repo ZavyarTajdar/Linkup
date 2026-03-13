@@ -1,17 +1,17 @@
 class ApiResponse {
     status: number;
-    message: string;
     data: any;
+    message: string;
     success: boolean;
 
     constructor(
         status: number, 
-        message?: string,
-        data: any = null 
+        data: any = null,
+        message?: string, 
     ) {
         this.status = status;
-        this.message = message || "Success";
         this.data = data;
+        this.message = message || "Success";
         this.success = status >= 200 && status < 300;
     }
 }

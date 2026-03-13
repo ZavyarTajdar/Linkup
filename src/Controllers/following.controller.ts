@@ -11,8 +11,9 @@ const followUser = asyncHandler(async (req, res) => {
     const followingId = new Types.ObjectId(req.params.followingId as string);
 
     await followUserService(userId, followingId);
-    return res.json(new ApiResponse(200, "User followed successfully", { message: "User followed successfully" }));
+    return res.json(new ApiResponse(200, { message: "User followed successfully" },"User followed successfully",));
 })
+
 
 export { 
     followUser
