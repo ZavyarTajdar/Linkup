@@ -3,37 +3,30 @@ import { ApiError } from '../Utils/apiError';
 import { Following } from '../Models/following.model';
 import { Types } from 'mongoose';
 
-export const followUserService = async (
-    userId: Types.ObjectId,
-    followingId: Types.ObjectId
-) => {
-
-    if (userId.equals(followingId)) {
-        throw new ApiError(400, "You cannot follow yourself");
-    }
-
+export const followUserService = async (userId: Types.ObjectId, followingId: Types.ObjectId) => {
     const user = await User.findById(userId);
     const following = await User.findById(followingId);
 
-    if (!user || !following) {
-        throw new ApiError(404, "User not found");
-    }
+    if (!user || !following) throw new ApiError(404, "User not found");
 
-    await Following.create({
-        follower: userId,
-        following: followingId
-    });
+    const alreadyFollowing = user.followings.some(id => id.equals(followingId));
+    if (alreadyFollowing) throw new ApiError(400, "You are already following this user");
 
-    await User.updateOne({ _id: userId.toString() }, { $inc: { followingsCount: 1 } });
-    await User.updateOne({ _id: followingId.toString() }, { $inc: { followersCount: 1 } });
+    // Add to arrays
+    user.followings.push(new Types.ObjectId(following._id));
+    following.followers.push(new Types.ObjectId(user._id));
 
-    user.followings.push(followingId);   // ObjectId directly
-    following.followers.push(userId);     // ObjectId directly
+    // Update counts
+    user.followingsCount = user.followings.length;
+    following.followersCount = following.followers.length;
 
     await user.save();
     await following.save();
+
     return {
-        message: "User followed successfully"
+        message: "Followed successfully",
+        followersCount: following.followersCount,
+        followingsCount: user.followingsCount
     };
 };
 
@@ -41,7 +34,6 @@ export const unfollowUserService = async (
     userId: Types.ObjectId,
     followingId: Types.ObjectId
 ) => {
-
     const user = await User.findById(userId);
     const following = await User.findById(followingId);
 
@@ -49,21 +41,25 @@ export const unfollowUserService = async (
         throw new ApiError(404, "User not found");
     }
 
-    const isFollowing = user.followings.map(id => id.equals(followingId))
-
+    const isFollowing = user.followings.some(id => id.equals(followingId));
     if (!isFollowing) {
         throw new ApiError(400, "You are not following this user");
     }
 
-    await User.updateOne({ _id: userId.toString() }, { $inc: { followingsCount: -1 } });
-    await User.updateOne({ _id: followingId.toString() }, { $inc: { followersCount: -1 } });
+    // Remove ids from arrays
+    user.followings = user.followings.filter(id => !id.equals(followingId));
+    following.followers = following.followers.filter(id => !id.equals(userId));
 
-    await following.save();
+    // Update counts from array length
+    user.followingsCount = user.followings.length;
+    following.followersCount = following.followers.length;
+
     await user.save();
+    await following.save();
 
     return {
         message: "Unfollowed successfully",
         followersCount: following.followersCount,
         followingsCount: user.followingsCount
     };
-}
+};

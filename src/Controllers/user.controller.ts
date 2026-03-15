@@ -12,7 +12,8 @@ import {
     refreshAccessTokenService,
     deleteUserService,
     searchUserService,
-    getFollowersService
+    getFollowersService,
+    getFollowingsService
 } from "../Services/user.service";
 
 import { User } from "../Models/user.model";
@@ -260,6 +261,23 @@ export const getFollowers = asyncHandler(async (req, res) => {
                 200,
                 followersList,
                 "Followers list fetched successfully"
+            )
+        );
+});
+
+export const getFollowing = asyncHandler(async (req, res) => {
+
+    const userId = req.user._id;
+
+    const followingList = await getFollowingsService(userId);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                followingList,
+                "Following list fetched successfully"
             )
         );
 });

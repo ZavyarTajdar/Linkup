@@ -8,7 +8,7 @@ pnpm-debug.log*
 # Build output
 dist/
 build/
-
+todos.txt
 # Environment variables
 .env
 .env.*

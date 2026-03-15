@@ -10,7 +10,8 @@ import {
     deleteUserAccount,
     searchById,
     searchUser,
-    getFollowers
+    getFollowers,
+    getFollowing
 } from "../Controllers/user.controller";
 import { upload } from "../Middleware/multer.middleware";
 import { verifyJWT } from "../Middleware/auth.middleware";
@@ -28,6 +29,7 @@ router.delete('/delete-account', verifyJWT, deleteUserAccount);
 router.get('/searchUser', verifyJWT, searchUser);
 router.get('/searchById/:id', verifyJWT, searchById);
 router.get('/getfollowers', verifyJWT, getFollowers);
+router.get('/getfollowing', verifyJWT, getFollowing);
 
 
 export { router as userRoutes };

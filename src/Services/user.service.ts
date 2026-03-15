@@ -218,14 +218,60 @@ export const searchUserService = async (search: string) => {
     return users;
 };
 
-export const getFollowersService = async (userId: Types.ObjectId) => {
+export const getFollowersService = async (
+    userId: Types.ObjectId,
+    page: number = 1,
+    limit: number = 10
+) => {
 
     const user = await User.findById(userId)
-        .populate("followers", "username nickname profileImg");
+    .populate({
+        path: 'followers',
+        select: 'username profileImg',
+        options: {
+            skip: (page - 1) * limit,
+            limit: limit,
+            sort: { createdAt: -1 } // latest followers first
+        }
+    });
+
 
     if (!user) {
         throw new Error("User not found");
     }
 
-    return user.followers;
+    const totalFollowers = user.followersCount;
+
+    return {
+        followers: user.followers,
+        page,
+        limit,
+        totalFollowers
+    };
+};
+
+export const getFollowingsService = async (
+    userId: Types.ObjectId,
+    page: number = 1,
+    limit: number = 10
+) => {
+    const user = await User.findById(userId)
+        .populate({
+            path: 'followings',
+            select: 'username profileImg',
+            options: {
+                skip: (page - 1) * limit,
+                limit: limit,
+                sort: { createdAt: -1 }
+            }
+        });
+
+    if (!user) throw new ApiError(404, "User not found");
+
+    return {
+        followings: user.followings,
+        page,
+        limit,
+        totalFollowings: user.followingsCount
+    };
 };
