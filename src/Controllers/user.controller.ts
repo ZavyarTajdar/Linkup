@@ -13,10 +13,13 @@ import {
     deleteUserService,
     searchUserService,
     getFollowersService,
-    getFollowingsService
+    getFollowingsService,
+    getSuggestedUsersService,
+    getMutualFollowersService
 } from "../Services/user.service";
 
 import { User } from "../Models/user.model";
+import { Types } from "mongoose";
 
 
 // ================= REGISTER =================
@@ -281,3 +284,35 @@ export const getFollowing = asyncHandler(async (req, res) => {
             )
         );
 });
+
+export const getSuggestedUsers = asyncHandler(async (req, res) =>{
+    const userId = req.user._id;
+    const Users = await getSuggestedUsersService(userId);
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                Users,
+                "Suggested users fetched successfully"
+            )
+        );
+})
+
+export const getMutualFollowers = asyncHandler(async (req, res) => {
+
+    const userId = req.user._id;
+    const otherUserId = new Types.ObjectId(req.params.otherUserId as string);
+    const users = await getMutualFollowersService(userId, otherUserId);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                users,
+                "Mutual followers fetched successfully"
+            )
+        );
+});
+

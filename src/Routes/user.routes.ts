@@ -11,7 +11,9 @@ import {
     searchById,
     searchUser,
     getFollowers,
-    getFollowing
+    getFollowing,
+    getMutualFollowers,
+    getSuggestedUsers
 } from "../Controllers/user.controller";
 import { upload } from "../Middleware/multer.middleware";
 import { verifyJWT } from "../Middleware/auth.middleware";
@@ -30,6 +32,7 @@ router.get('/searchUser', verifyJWT, searchUser);
 router.get('/searchById/:id', verifyJWT, searchById);
 router.get('/getfollowers', verifyJWT, getFollowers);
 router.get('/getfollowing', verifyJWT, getFollowing);
-
+router.get('/getsuggestedusers', verifyJWT, getSuggestedUsers);
+router.get('/getmutualfollowers/:otherUserId', verifyJWT, getMutualFollowers);
 
 export { router as userRoutes };

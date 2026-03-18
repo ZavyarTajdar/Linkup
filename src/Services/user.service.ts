@@ -275,3 +275,32 @@ export const getFollowingsService = async (
         totalFollowings: user.followingsCount
     };
 };
+
+export const getSuggestedUsersService = async( userId: Types.ObjectId, limit: number = 10) => {
+    const user = await User.findById(userId).select("followings");
+
+    const excludedUsers = [...user!.followings, userId];
+
+    const suggestedUsers = await User.find({ _id: { $nin: excludedUsers.map(id => id.toString()) } })
+        .select("username profileImg")
+        .sort({ followersCount: -1 })
+        .limit(limit);
+
+    return suggestedUsers;
+}
+
+export const getMutualFollowersService = async (userId: Types.ObjectId, otherUserId: Types.ObjectId) => {
+    const user = await User.findById(userId).select("followings");
+    const otherUser = await User.findById(otherUserId).select("followings");
+
+    if (!user || !otherUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const mutual = user.followings.filter(followingId => otherUser.followings.includes(followingId));
+
+    const mutualUsers = await User.find({ _id: { $in: mutual.map(id => id.toString()) } })
+        .select('username profileImg');
+
+    return mutualUsers;
+}
