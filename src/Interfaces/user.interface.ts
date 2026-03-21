@@ -22,6 +22,7 @@ interface IUser {
     profilePrivacy: "public" | "private";
     followersCount: number;
     followingsCount: number;
+    postsCount: number;
 
     refreshToken?: string;
     role: string;

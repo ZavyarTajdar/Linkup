@@ -15,7 +15,9 @@ import {
     getFollowersService,
     getFollowingsService,
     getSuggestedUsersService,
-    getMutualFollowersService
+    getMutualFollowersService,
+    getUserbyIdService,
+    toggleProfilePrivacyService
 } from "../Services/user.service";
 
 import { User } from "../Models/user.model";
@@ -227,20 +229,12 @@ export const searchUser = asyncHandler(async (req, res) => {
 
 // ================= SEARCH USER BY ID =================
 
-export const searchById = asyncHandler(async (req, res) => {
+export const getUserbyId = asyncHandler(async (req, res) => {
 
-    const { userId } = req.params;
+    const userId = req.user._id;
+    const requestedUserId = new Types.ObjectId(req.params.requestedUserId as string);
 
-    if (!userId) {
-        throw new ApiError(404, "Enter ID correctly");
-    }
-
-    const user = await User.findById(userId).select("-refreshToken");
-
-    if (!user) {
-        throw new ApiError(404, "User doesn't exist");
-    }
-
+    const user = await getUserbyIdService(requestedUserId, userId);
     return res
         .status(200)
         .json(
@@ -316,3 +310,13 @@ export const getMutualFollowers = asyncHandler(async (req, res) => {
         );
 });
 
+export const toggleProfilePrivacy = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+
+    const user = await toggleProfilePrivacyService(userId);
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, user, "Profile privacy toggled successfully")
+        );
+});

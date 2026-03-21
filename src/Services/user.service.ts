@@ -218,6 +218,34 @@ export const searchUserService = async (search: string) => {
     return users;
 };
 
+// Assume you have User model
+export const getUserbyIdService = async (requestedId: Types.ObjectId, userId: Types.ObjectId) => {
+
+    const requestedUser = await User.findById(requestedId);
+
+    if (!requestedUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    if (requestedUser.profilePrivacy === "private") {
+        if(requestedUser.followers.includes(userId)){
+            return requestedUser;
+        }else{
+            return { 
+            username: requestedUser.username, 
+            profileImg: requestedUser.profileImg,
+            followersCount: requestedUser.followersCount,
+            followingsCount: requestedUser.followingsCount,
+            postsCount: requestedUser.postsCount,
+            profilePrivacy: requestedUser.profilePrivacy,
+            message: "You need to follow this user to view their profile" 
+            };
+        }
+    }
+
+    return requestedUser;
+};
+
 export const getFollowersService = async (
     userId: Types.ObjectId,
     page: number = 1,
@@ -303,4 +331,19 @@ export const getMutualFollowersService = async (userId: Types.ObjectId, otherUse
         .select('username profileImg');
 
     return mutualUsers;
+}
+
+export const toggleProfilePrivacyService = async (userId: Types.ObjectId) => {
+    const user = await User.findById(userId);
+
+    if (!user) throw new ApiError(404, "User not found");
+
+    if (user.profilePrivacy === "public") {
+        user.profilePrivacy = "private";
+    } else {
+        user.profilePrivacy = "public";
+    }
+
+    await user.save();
+    return user;
 }

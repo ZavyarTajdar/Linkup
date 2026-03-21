@@ -8,12 +8,13 @@ import {
     getUserProfile, 
     refreshAccessToken, 
     deleteUserAccount,
-    searchById,
+    getUserbyId,
     searchUser,
     getFollowers,
     getFollowing,
     getMutualFollowers,
-    getSuggestedUsers
+    getSuggestedUsers,
+    toggleProfilePrivacy
 } from "../Controllers/user.controller";
 import { upload } from "../Middleware/multer.middleware";
 import { verifyJWT } from "../Middleware/auth.middleware";
@@ -29,10 +30,10 @@ router.get('/profile', verifyJWT, getUserProfile);
 router.post('/refresh-token', verifyJWT,refreshAccessToken);
 router.delete('/delete-account', verifyJWT, deleteUserAccount);
 router.get('/searchUser', verifyJWT, searchUser);
-router.get('/searchById/:id', verifyJWT, searchById);
+router.get('/getUserbyId/:requestedUserId', verifyJWT, getUserbyId);
 router.get('/getfollowers', verifyJWT, getFollowers);
 router.get('/getfollowing', verifyJWT, getFollowing);
 router.get('/getsuggestedusers', verifyJWT, getSuggestedUsers);
 router.get('/getmutualfollowers/:otherUserId', verifyJWT, getMutualFollowers);
-
+router.patch('/toggle-profile-privacy', verifyJWT, toggleProfilePrivacy);
 export { router as userRoutes };

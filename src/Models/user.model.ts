@@ -77,6 +77,11 @@ const userSchema = new Schema<IUser>(
             },
         ],
 
+        postsCount: {
+            type: Number,
+            default: 0,
+        },
+
         followers: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
