@@ -218,7 +218,6 @@ export const searchUserService = async (search: string) => {
     return users;
 };
 
-// Assume you have User model
 export const getUserbyIdService = async (requestedId: Types.ObjectId, userId: Types.ObjectId) => {
 
     const requestedUser = await User.findById(requestedId);

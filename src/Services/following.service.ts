@@ -3,32 +3,71 @@ import { ApiError } from '../Utils/apiError';
 import { Following } from '../Models/following.model';
 import { Types } from 'mongoose';
 
-export const followUserService = async (userId: Types.ObjectId, followingId: Types.ObjectId) => {
+export const followUserService = async (
+    userId: Types.ObjectId,
+    followingId: Types.ObjectId
+  ) => {
     const user = await User.findById(userId);
     const following = await User.findById(followingId);
-
-    if (!user || !following) throw new ApiError(404, "User not found");
-
-    const alreadyFollowing = user.followings.some(id => id.equals(followingId));
-    if (alreadyFollowing) throw new ApiError(400, "You are already following this user");
-
-    // Add to arrays
-    user.followings.push(new Types.ObjectId(following._id));
-    following.followers.push(new Types.ObjectId(user._id));
-
-    // Update counts
+  
+    if (!user || !following) {
+      throw new ApiError(404, "User not found");
+    }
+  
+    // ❌ self follow
+    if (userId.equals(followingId)) {
+      throw new ApiError(400, "You cannot follow yourself");
+    }
+  
+    // ✅ already following
+    const alreadyFollowing = user.followings.some(id =>
+      id.equals(followingId)
+    );
+    if (alreadyFollowing) {
+      throw new ApiError(400, "Already following this user");
+    }
+  
+    // 🔒 PRIVATE ACCOUNT LOGIC
+    if (following.profilePrivacy === "private") {
+  
+      const alreadyRequested = user.sentFollowRequests.some(id =>
+        id.equals(followingId)
+      );
+  
+      if (alreadyRequested) {
+        throw new ApiError(400, "Follow request already sent");
+      }
+  
+      // send request
+      user.sentFollowRequests.push(followingId);
+      following.followRequests.push(userId);
+  
+      await user.save();
+      await following.save();
+  
+      return {
+        type: "request",
+        message: "Follow request sent",
+      };
+    }
+  
+    // 🌍 PUBLIC ACCOUNT LOGIC
+    user.followings.push(followingId);
+    following.followers.push(userId);
+  
     user.followingsCount = user.followings.length;
     following.followersCount = following.followers.length;
-
+  
     await user.save();
     await following.save();
-
+  
     return {
-        message: "Followed successfully",
-        followersCount: following.followersCount,
-        followingsCount: user.followingsCount
+      type: "follow",
+      message: "Followed successfully",
+      followersCount: following.followersCount,
+      followingsCount: user.followingsCount,
     };
-};
+  };
 
 export const unfollowUserService = async (
     userId: Types.ObjectId,
@@ -63,3 +102,5 @@ export const unfollowUserService = async (
         followingsCount: user.followingsCount
     };
 };
+
+//todo : ACCEPT FOLLOW REQUEST and Remove follow request, and reject follow req

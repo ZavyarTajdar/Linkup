@@ -5,6 +5,7 @@ interface IUser {
 
     nickname: string;
     phone?: string;
+    bio?: string;
 
     email: string;
     username: string;
@@ -18,7 +19,11 @@ interface IUser {
     savedPost: Types.ObjectId[];
     followers: Types.ObjectId[];
     followings: Types.ObjectId[];
+    followRequests: Types.ObjectId[]        // incoming requests
+    sentFollowRequests: Types.ObjectId[]    // outgoing requests
+
     isBlocked: boolean;
+    isVerified: boolean;
     profilePrivacy: "public" | "private";
     followersCount: number;
     followingsCount: number;

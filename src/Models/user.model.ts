@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser>(
         nickname: {
             type: String,
             trim: true,
-            required : true
+            required: true
         },
 
         phone: {
@@ -23,7 +23,7 @@ const userSchema = new Schema<IUser>(
             trim: true,
             lowercase: true,
         },
-        
+
         username: {
             type: String,
             required: true,
@@ -92,6 +92,20 @@ const userSchema = new Schema<IUser>(
             ref: "User",
         }],
 
+        followRequests: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+
+        sentFollowRequests: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+
         isBlocked: {
             type: Boolean,
             default: false,
@@ -108,20 +122,29 @@ const userSchema = new Schema<IUser>(
             default: 0,
         },
 
+        isVerified: { 
+            type: Boolean, 
+            default: false 
+        },
+
+        bio: { 
+            type: String 
+        },
+
         followingsCount: {
             type: Number,
             default: 0,
         },
-        
+
     },
     { timestamps: true },
 );
 
 userSchema.pre("save", async function () {
-  if (!this.password) return;
-  if (!this.isModified("password")) return;
+    if (!this.password) return;
+    if (!this.isModified("password")) return;
 
-  this.password = bcrypt.hashSync(this.password, 10);
+    this.password = bcrypt.hashSync(this.password, 10);
 });
 
 
