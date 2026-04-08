@@ -23,7 +23,7 @@ export const followUser = asyncHandler(async (req, res) => {
         result.message
       )
     );
-  });
+});
 
 export const unfollowUser = asyncHandler(async (req, res) => {
     const userId = new Types.ObjectId(req.user._id);
@@ -36,3 +36,4 @@ export const unfollowUser = asyncHandler(async (req, res) => {
     await unfollowUserService(userId, followingId);
     return res.json(new ApiResponse(200, "user unfollow Successfully"));
 }) 
+

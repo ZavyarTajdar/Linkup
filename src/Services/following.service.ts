@@ -67,7 +67,7 @@ export const followUserService = async (
       followersCount: following.followersCount,
       followingsCount: user.followingsCount,
     };
-  };
+};
 
 export const unfollowUserService = async (
     userId: Types.ObjectId,
@@ -102,5 +102,11 @@ export const unfollowUserService = async (
         followingsCount: user.followingsCount
     };
 };
+
+export const acceptFollowRequest = async(
+    
+) => {
+
+}
 
 //todo : ACCEPT FOLLOW REQUEST and Remove follow request, and reject follow req
