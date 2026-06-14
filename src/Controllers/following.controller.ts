@@ -7,7 +7,7 @@ import { Types } from "mongoose";
 // ================= FOLLOW USER =================
 
 export const followUser = asyncHandler(async (req, res) => {
-    const userId = new Types.ObjectId(req.user._id);
+    const userId = new Types.ObjectId(req.user?._id);
     const followingId = new Types.ObjectId(req.params.followingId as string);
   
     if (!followingId) {
@@ -26,7 +26,7 @@ export const followUser = asyncHandler(async (req, res) => {
 });
 
 export const unfollowUser = asyncHandler(async (req, res) => {
-    const userId = new Types.ObjectId(req.user._id);
+    const userId = new Types.ObjectId(req.user?._id);
     const followingId = new Types.ObjectId(req.params.followingId as string);
 
     if (!followingId) {

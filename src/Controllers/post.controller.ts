@@ -6,14 +6,14 @@ import { Post } from "../Models/post.model";
 
 const createPost = asyncHandler(async (req, res) => {
     const { title, description, thumbnail } = req.body;
-    const owner = req.user._id;
-
-    const content = req.files?.content ? (req.files.content as Express.Multer.File[]).map(file => file.path) : [];
+    const owner = req.user?._id;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const content = files?.content ? (files.content as Express.Multer.File[]).map(file => file.path) : [];
     if (!title || !description || !content) {
         throw new ApiError(400, "Title, description, and content are required");
     }
 
-    const thumbnailPath = req.files?.thumbnail ? (req.files.thumbnail as Express.Multer.File[])[0].path : undefined;
+    const thumbnailPath = files?.thumbnail ? (files.thumbnail as Express.Multer.File[])[0].path : undefined;
     const post = await createPostService({ owner, title, description, thumbnail: thumbnailPath, content });
 
     res.status(201).json(new ApiResponse(201, post, "Post created successfully"));
@@ -22,7 +22,8 @@ const createPost = asyncHandler(async (req, res) => {
 const updatePost = asyncHandler(async(req, res) => {
     const { title, description, thumbnail } = req.body;
 
-    const thumbnailPath = req.files?.thumbnail ? (req.files.thumbnail as Express.Multer.File[])[0].path : undefined;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const thumbnailPath = files?.thumbnail ? (files.thumbnail as Express.Multer.File[])[0].path : undefined;
     const post = await updatePostService({ title, description, thumbnail: thumbnailPath });
 
     res.status(200).json(new ApiResponse(200, post, "Post updated successfully"));

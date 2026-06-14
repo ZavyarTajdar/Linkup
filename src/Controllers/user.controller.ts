@@ -1,7 +1,7 @@
 import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
-
+import { Multer } from "multer";
 import {
     registerUserService,
     loginUserService,
@@ -33,8 +33,8 @@ export const registerUser = asyncHandler(async (req, res) => {
     if (!username || !email || !password || !nickname) {
         throw new ApiError(400, "All fields are required");
     }
-
-    const profileImagePath = req.files?.profileImg?.[0]?.path;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const profileImagePath = files?.profileImg?.[0]?.path;
 
     if (!profileImagePath) {
         throw new ApiError(400, "Profile image is required");
@@ -125,7 +125,9 @@ export const updateUserCredentials = asyncHandler(async (req, res) => {
 
 export const updateProfileImage = asyncHandler(async (req, res) => {
 
-    const imagePath = req.files?.profileImage?.[0]?.path;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    
+    const imagePath = files?.profileImage?.[0]?.path;
 
     if (!imagePath) {
         throw new ApiError(400, "Image is required");
@@ -231,7 +233,7 @@ export const searchUser = asyncHandler(async (req, res) => {
 
 export const getUserbyId = asyncHandler(async (req, res) => {
 
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const requestedUserId = new Types.ObjectId(req.params.requestedUserId as string);
 
     const user = await getUserbyIdService(requestedUserId, userId);
@@ -247,7 +249,7 @@ export const getUserbyId = asyncHandler(async (req, res) => {
 
 export const getFollowers = asyncHandler(async (req, res) => {
 
-    const userId = req.user._id;
+    const userId = req.user?._id;
 
     const followersList = await getFollowersService(userId);
 
@@ -264,7 +266,7 @@ export const getFollowers = asyncHandler(async (req, res) => {
 
 export const getFollowing = asyncHandler(async (req, res) => {
 
-    const userId = req.user._id;
+    const userId = req.user?._id;
 
     const followingList = await getFollowingsService(userId);
 
@@ -280,7 +282,7 @@ export const getFollowing = asyncHandler(async (req, res) => {
 });
 
 export const getSuggestedUsers = asyncHandler(async (req, res) =>{
-    const userId = req.user._id;
+    const userId = req.user?._id;
     const Users = await getSuggestedUsersService(userId);
     return res
         .status(200)
@@ -295,7 +297,7 @@ export const getSuggestedUsers = asyncHandler(async (req, res) =>{
 
 export const getMutualFollowers = asyncHandler(async (req, res) => {
 
-    const userId = req.user._id;
+    const userId = req.user!._id;
     const otherUserId = new Types.ObjectId(req.params.otherUserId as string);
     const users = await getMutualFollowersService(userId, otherUserId);
 
@@ -311,7 +313,7 @@ export const getMutualFollowers = asyncHandler(async (req, res) => {
 });
 
 export const toggleProfilePrivacy = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
+    const userId = req.user?._id;
 
     const user = await toggleProfilePrivacyService(userId);
     return res

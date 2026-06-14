@@ -3,9 +3,10 @@
     /* Project Structure */
     "rootDir": "src",
     "outDir": "dist",
-    "typeRoots": ["./node_modules/@types", "src/Types"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+
     /* Runtime */
-    "target": "es2020",
+    "target": "ES2022",
     "module": "commonjs",
     "moduleResolution": "node",
 
@@ -18,7 +19,7 @@
     "noImplicitAny": false,
 
     /* Node Environment */
-    "types": ["node"],
+    // REMOVED: "types": ["node"] <- Removing this lets TS read your typeRoots!
 
     /* Quality of Life */
     "resolveJsonModule": true,
@@ -26,6 +27,11 @@
     "forceConsistentCasingInFileNames": true
   },
 
-  "include": ["src"],
+  /* Forces ts-node to read your custom .d.ts files during development */
+  "ts-node": {
+    "files": true
+  },
+
+  "include": ["src/**/*"], // Added/**/* to ensure all nested folders are tracked properly
   "exclude": ["node_modules", "dist"]
 }
