@@ -39,16 +39,12 @@ export const registerUserService = async (data: {
 
     const uploadedImage = await UploadOnCloudinary(profileImagePath);
 
-    if (!uploadedImage?.url) {
-        throw new ApiError(400, "Failed to upload image");
-    }
-
     const user = await User.create({
         username,
         email,
         password,
         nickname,
-        profileImg: uploadedImage.url
+        profileImg: uploadedImage?.url
     });
 
     return await User.findById(user._id).select("-password -refreshToken");
@@ -342,7 +338,7 @@ export const toggleProfilePrivacyService = async (userId: Types.ObjectId) => {
     } else {
         user.profilePrivacy = "public";
     }
-
+    user.followRequests = [];
     await user.save();
     return user;
 }

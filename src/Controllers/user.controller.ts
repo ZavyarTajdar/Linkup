@@ -36,10 +36,6 @@ export const registerUser = asyncHandler(async (req, res) => {
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const profileImagePath = files?.profileImg?.[0]?.path;
 
-    if (!profileImagePath) {
-        throw new ApiError(400, "Profile image is required");
-    }
-
     const user = await registerUserService({
         username,
         email,

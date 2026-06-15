@@ -14,12 +14,12 @@ export const followUserService = async (
       throw new ApiError(404, "User not found");
     }
   
-    // ❌ self follow
+    // self follow
     if (userId.equals(followingId)) {
       throw new ApiError(400, "You cannot follow yourself");
     }
   
-    // ✅ already following
+    // already following
     const alreadyFollowing = user.followings.some(id =>
       id.equals(followingId)
     );
@@ -27,7 +27,7 @@ export const followUserService = async (
       throw new ApiError(400, "Already following this user");
     }
   
-    // 🔒 PRIVATE ACCOUNT LOGIC
+    // PRIVATE ACCOUNT LOGIC
     if (following.profilePrivacy === "private") {
   
       const alreadyRequested = user.sentFollowRequests.some(id =>
@@ -51,7 +51,7 @@ export const followUserService = async (
       };
     }
   
-    // 🌍 PUBLIC ACCOUNT LOGIC
+    // PUBLIC ACCOUNT LOGIC
     user.followings.push(followingId);
     following.followers.push(userId);
   
@@ -67,6 +67,25 @@ export const followUserService = async (
       followersCount: following.followersCount,
       followingsCount: user.followingsCount,
     };
+};
+
+export const cancelFollowRequestService = async (
+    userId: Types.ObjectId,
+    followingId: Types.ObjectId
+) => {
+    const user = await User.findById(userId);
+    const requestedUser = await User.findById(followingId);
+
+    if (!user || !requestedUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Remove follow request from both users
+    user.sentFollowRequests = user.sentFollowRequests.filter(id => !id.equals(followingId));
+    requestedUser.followRequests = requestedUser.followRequests.filter(id => !id.equals(userId));
+
+    await user.save();
+    await requestedUser.save();
 };
 
 export const unfollowUserService = async (
@@ -103,10 +122,75 @@ export const unfollowUserService = async (
     };
 };
 
-export const acceptFollowRequest = async(
-    
+export const rejectFollowRequestService = async (
+    userId: Types.ObjectId,
+    requesterId: Types.ObjectId
 ) => {
+    const user = await User.findById(userId);
+    const requester = await User.findById(requesterId);
 
-}
+    if (!user || !requester) {
+        throw new ApiError(404, "User not found");
+    }
 
-//todo : ACCEPT FOLLOW REQUEST and Remove follow request, and reject follow req
+    // Remove follow request from both users
+    user.followRequests = user.followRequests.filter(id => !id.equals(requesterId));
+    requester.sentFollowRequests = requester.sentFollowRequests.filter(id => !id.equals(userId)); 
+    await user.save();
+    await requester.save();
+};
+
+export const acceptFollowRequestService = async(
+    userId: Types.ObjectId,
+    requesterId: Types.ObjectId
+) => {
+    const user = await User.findById(userId);
+    const requester = await User.findById(requesterId);
+
+    if (!user || !requester) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Remove follow request from both users
+    user.followRequests = user.followRequests.filter(id => !id.equals(requesterId));
+    requester.sentFollowRequests = requester.sentFollowRequests.filter(id => !id.equals(userId));
+
+    // Add each other to their respective followings
+    user.followers.push(requesterId);
+    requester.followings.push(userId);
+
+    await user.save();
+    await requester.save();
+};
+
+export const removeFollowerService = async (
+    userId: Types.ObjectId,
+    followerId: Types.ObjectId
+) => {
+    const user = await User.findById(userId);
+    const follower = await User.findById(followerId);
+
+    if (!user || !follower) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const isFollower = (user.followers || []).some(id => id.equals(followerId));
+
+    if (!isFollower) {
+        throw new ApiError(400, "This user is not your follower");
+    }
+
+    user.followers = user.followers.filter(id => !id.equals(followerId));
+    follower.followings = follower.followings.filter(id => !id.equals(userId));
+
+    await user.save();
+    await follower.save();
+};
+
+export const getFollowerRequestsService = async (userId: Types.ObjectId) => {
+    const user = await User.findById(userId).populate('followRequests', 'username profilePicture');
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    return user.followRequests;
+  }

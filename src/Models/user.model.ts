@@ -39,7 +39,7 @@ const userSchema = new Schema<IUser>(
         profileImg: {
             type: String,
             default:
-                "https://res.cloudinary.com/dpsofsi0a/image/upload/v1768381071/download_tiwsxx.png",
+                "https://res.cloudinary.com/dpsofsi0a/image/upload/v1781461217/user-profile-flat-illustration-avatar-person-icon-gender-neutral-silhouette-profile-picture-free-vector_qudxco.jpg",
         },
 
         commentPost: [
