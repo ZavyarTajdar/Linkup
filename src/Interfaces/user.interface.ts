@@ -21,6 +21,7 @@ interface IUser {
     followings: Types.ObjectId[];
     followRequests: Types.ObjectId[]        // incoming requests
     sentFollowRequests: Types.ObjectId[]    // outgoing requests
+    blockedUsers: Types.ObjectId[];
 
     isBlocked: boolean;
     isVerified: boolean;

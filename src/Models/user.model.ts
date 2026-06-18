@@ -131,6 +131,13 @@ const userSchema = new Schema<IUser>(
             type: String 
         },
 
+        blockedUsers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+
         followingsCount: {
             type: Number,
             default: 0,

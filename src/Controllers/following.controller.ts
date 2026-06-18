@@ -11,7 +11,6 @@ import {
   getFollowerRequestsService} from "../Services/following.service";
 import { Types } from "mongoose";
 
-// ================= FOLLOW USER =================
 
 export const followUser = asyncHandler(async (req, res) => {
     const userId = new Types.ObjectId(req.user?._id);

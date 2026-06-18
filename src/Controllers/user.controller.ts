@@ -23,7 +23,6 @@ import {
 import { User } from "../Models/user.model";
 import { Types } from "mongoose";
 
-
 // ================= REGISTER =================
 
 export const registerUser = asyncHandler(async (req, res) => {
@@ -50,7 +49,6 @@ export const registerUser = asyncHandler(async (req, res) => {
             new ApiResponse(201, user, "User registered successfully")
         );
 });
-
 
 // ================= LOGIN =================
 
@@ -89,7 +87,6 @@ export const loginUser = asyncHandler(async (req, res) => {
         );
 });
 
-
 // ================= LOGOUT =================
 
 export const logoutUser = asyncHandler(async (req, res) => {
@@ -104,7 +101,6 @@ export const logoutUser = asyncHandler(async (req, res) => {
         );
 });
 
-
 // ================= UPDATE USER =================
 
 export const updateUserCredentials = asyncHandler(async (req, res) => {
@@ -115,7 +111,6 @@ export const updateUserCredentials = asyncHandler(async (req, res) => {
         new ApiResponse(200, user, "Credentials updated successfully")
     );
 });
-
 
 // ================= PROFILE IMAGE =================
 
@@ -136,7 +131,6 @@ export const updateProfileImage = asyncHandler(async (req, res) => {
     );
 });
 
-
 // ================= GET PROFILE =================
 
 export const getUserProfile = asyncHandler(async (req, res) => {
@@ -147,7 +141,6 @@ export const getUserProfile = asyncHandler(async (req, res) => {
         new ApiResponse(200, user, "Profile fetched successfully")
     );
 });
-
 
 // ================= REFRESH ACCESS TOKEN =================
 
@@ -184,7 +177,6 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
         );
 });
 
-
 // ================= DELETE ACCOUNT =================
 
 export const deleteUserAccount = asyncHandler(async (req, res) => {
@@ -203,7 +195,6 @@ export const deleteUserAccount = asyncHandler(async (req, res) => {
             new ApiResponse(200, {}, "User deleted successfully")
         );
 });
-
 
 // ================= SEARCH USER =================
 
@@ -224,7 +215,6 @@ export const searchUser = asyncHandler(async (req, res) => {
         );
 });
 
-
 // ================= SEARCH USER BY ID =================
 
 export const getUserbyId = asyncHandler(async (req, res) => {
@@ -239,7 +229,6 @@ export const getUserbyId = asyncHandler(async (req, res) => {
             new ApiResponse(200, user, "User fetched successfully")
         );
 });
-
 
 // ================= GET FOLLOWERS =================
 
@@ -260,6 +249,8 @@ export const getFollowers = asyncHandler(async (req, res) => {
         );
 });
 
+// ================= GET FOLLOWINGS =================
+
 export const getFollowing = asyncHandler(async (req, res) => {
 
     const userId = req.user?._id;
@@ -277,6 +268,8 @@ export const getFollowing = asyncHandler(async (req, res) => {
         );
 });
 
+// ================= GET SUGGESTED USERS =================
+
 export const getSuggestedUsers = asyncHandler(async (req, res) =>{
     const userId = req.user?._id;
     const Users = await getSuggestedUsersService(userId);
@@ -290,6 +283,8 @@ export const getSuggestedUsers = asyncHandler(async (req, res) =>{
             )
         );
 })
+
+// ================= GET MUTUAL FOLLOWERS =================
 
 export const getMutualFollowers = asyncHandler(async (req, res) => {
 
@@ -307,6 +302,8 @@ export const getMutualFollowers = asyncHandler(async (req, res) => {
             )
         );
 });
+
+// ================= TOGGLE PROFILE PRIVACY =================
 
 export const toggleProfilePrivacy = asyncHandler(async (req, res) => {
     const userId = req.user?._id;

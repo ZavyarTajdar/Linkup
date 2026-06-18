@@ -185,6 +185,7 @@ export const refreshAccessTokenService = async (incommingRefreshToken: string) =
 }
 
 // ================= DELETE USER =================
+
 export const deleteUserService = async (userId: string) => {
     try {
         const user = await User.findByIdAndDelete(userId);
@@ -197,6 +198,8 @@ export const deleteUserService = async (userId: string) => {
         throw new ApiError(500, "Failed to delete user");
     }
 }
+
+// ================= SEARCH USERS =================
 
 export const searchUserService = async (search: string) => {
 
@@ -213,6 +216,8 @@ export const searchUserService = async (search: string) => {
 
     return users;
 };
+
+// ================= GET USER BY ID =================
 
 export const getUserbyIdService = async (requestedId: Types.ObjectId, userId: Types.ObjectId) => {
 
@@ -240,6 +245,8 @@ export const getUserbyIdService = async (requestedId: Types.ObjectId, userId: Ty
 
     return requestedUser;
 };
+
+// ================= GET FOLLOWERS & FOLLOWINGS =================
 
 export const getFollowersService = async (
     userId: Types.ObjectId,
@@ -273,6 +280,8 @@ export const getFollowersService = async (
     };
 };
 
+// ================= GET FOLLOWINGS =================
+
 export const getFollowingsService = async (
     userId: Types.ObjectId,
     page: number = 1,
@@ -299,6 +308,8 @@ export const getFollowingsService = async (
     };
 };
 
+// ================= SUGGESTED USERS =================
+
 export const getSuggestedUsersService = async( userId: Types.ObjectId, limit: number = 10) => {
     const user = await User.findById(userId).select("followings");
 
@@ -311,6 +322,8 @@ export const getSuggestedUsersService = async( userId: Types.ObjectId, limit: nu
 
     return suggestedUsers;
 }
+
+// ================= MUTUAL FOLLOWERS =================
 
 export const getMutualFollowersService = async (userId: Types.ObjectId, otherUserId: Types.ObjectId) => {
     const user = await User.findById(userId).select("followings");
@@ -327,6 +340,8 @@ export const getMutualFollowersService = async (userId: Types.ObjectId, otherUse
 
     return mutualUsers;
 }
+
+// ================= TOGGLE PROFILE PRIVACY =================
 
 export const toggleProfilePrivacyService = async (userId: Types.ObjectId) => {
     const user = await User.findById(userId);
