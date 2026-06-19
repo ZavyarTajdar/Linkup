@@ -1,10 +1,11 @@
+import { Types } from "mongoose";
 import { Post } from "../Models/post.model";
 import { User } from "../Models/user.model";
 import { ApiError } from "../Utils/apiError";
 import { UploadOnCloudinary } from "../Utils/cloudinary";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 
-const createPostService = async (data: {
+export const createPostService = async (data: {
     owner: string;
     title: string;
     description: string;
@@ -51,7 +52,7 @@ const createPostService = async (data: {
     return post;
 };
 
-const updatePostService = async (
+export const updatePostService = async (
     postId: string,
     data: {
         title?: string;
@@ -74,7 +75,7 @@ const updatePostService = async (
     return post;
 }
 
-const getAllPostsService = async () => {
+export const getAllPostsService = async () => {
     const posts = await Post.aggregate([
         {
             $lookup: {
@@ -115,5 +116,23 @@ const getAllPostsService = async () => {
     ]);
     return posts;
 }
+// Todo : Comment bhi populate krne hain
+export const fetchPostByIdService = async(postId: string) => {
+    const post = await Post.findById(postId).populate("owner", "username nickname profileImg")
 
-export { createPostService, updatePostService, getAllPostsService };
+    if(!post){
+        throw new ApiError(404, "Post Does Not Exist!")
+    }
+
+    return post
+}
+
+export const fetchPostsByUserIdService = async (userId: string) => {
+    const posts = await Post.find({ owner: new Types.ObjectId(userId) }).populate("owner", "username nickname profileImg").sort({ createdAt: -1 });
+
+    if (!posts) {
+        throw new ApiError(404, "No posts found for this user");
+    }
+
+    return posts;
+};
