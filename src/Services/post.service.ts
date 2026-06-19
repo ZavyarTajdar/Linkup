@@ -136,3 +136,4 @@ export const fetchPostsByUserIdService = async (userId: string) => {
 
     return posts;
 };
+

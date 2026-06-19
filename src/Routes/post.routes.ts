@@ -1,4 +1,4 @@
-import { createPost, getAllPosts, updatePost, fetchPostById, fetchPostsByUserId,  } from "../Controllers/post.controller";
+import { createPost, getAllPosts, updatePost, fetchPostById, fetchPostsByUserId, getOwnPosts,  } from "../Controllers/post.controller";
 import { Router } from "express";
 import { upload } from "../Middleware/multer.middleware";
 import { verifyJWT } from "../Middleware/auth.middleware";
@@ -10,4 +10,5 @@ router.put('/updatePost/:postId', upload.fields([{ name: 'thumbnail', maxCount: 
 router.get('/getAllPosts', getAllPosts);
 router.get('/fetchPostById/:postId', fetchPostById);
 router.get('/fetchPostsByUserId/:userId', fetchPostsByUserId);
+router.get('/getOwnPosts', verifyJWT, getOwnPosts);
 export { router as postRoutes };

@@ -60,3 +60,11 @@ export const fetchPostsByUserId = asyncHandler(async(req, res) => {
 
     res.status(200).json(new ApiResponse(200, posts, "Posts retrieved successfully"));
 });
+
+export const getOwnPosts = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+    
+    const posts = await Post.find({ owner: new Types.ObjectId(userId) }).sort({ createdAt: -1 });
+
+    res.status(200).json(new ApiResponse(200, posts, "Posts retrieved successfully"));
+});
