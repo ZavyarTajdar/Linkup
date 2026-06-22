@@ -1,7 +1,16 @@
 import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
-import { createPostService, updatePostService, getAllPostsService, fetchPostByIdService, fetchPostsByUserIdService } from "../Services/post.service";
+import { 
+    createPostService, 
+    updatePostService, 
+    getAllPostsService, 
+    fetchPostByIdService, 
+    fetchPostsByUserIdService, 
+    deletePostService, 
+    archivePostService, 
+    unarchivePostService 
+} from "../Services/post.service";
 import { Post } from "../Models/post.model";
 import { Types } from "mongoose";
 
@@ -40,23 +49,25 @@ export const getAllPosts = asyncHandler(async (req, res) => {
 });
 
 export const fetchPostById = asyncHandler(async(req, res) => {
+    const userId = req.user?._id;
     const postId = req.params.postId as string;
     
     if (!postId) {
         throw new ApiError(400, "Post ID is required");
     }
-    const post = await fetchPostByIdService(postId);
+    const post = await fetchPostByIdService(postId, userId);
 
     res.status(200).json(new ApiResponse(200, post, "Post retrieved successfully"));
 });
 
 export const fetchPostsByUserId = asyncHandler(async(req, res) => {
+    const viewerId = req.user?._id;
     const userId = req.params.userId as string;
 
     if (!userId) {
         throw new ApiError(400, "User ID is required");
     }
-    const posts = await fetchPostsByUserIdService(userId);
+    const posts = await fetchPostsByUserIdService(userId, viewerId);
 
     res.status(200).json(new ApiResponse(200, posts, "Posts retrieved successfully"));
 });
@@ -67,4 +78,41 @@ export const getOwnPosts = asyncHandler(async (req, res) => {
     const posts = await Post.find({ owner: new Types.ObjectId(userId) }).sort({ createdAt: -1 });
 
     res.status(200).json(new ApiResponse(200, posts, "Posts retrieved successfully"));
+});
+
+export const deletePost = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+    const postId = req.params.postId as string;
+    if (!postId) {
+        throw new ApiError(400, "Post ID is required");
+    }
+    await deletePostService(postId, userId);
+
+    res.status(200).json(new ApiResponse(200, null, "Post deleted successfully"));
+});
+
+export const archivePost = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+    const postId = req.params.postId as string;
+
+    if (!postId) {
+        throw new ApiError(400, "Post ID is required");
+    }
+
+    const post = await archivePostService(postId, userId);
+
+    res.status(200).json(new ApiResponse(200, post, "Post archived successfully"));
+});
+
+export const unarchivePost = asyncHandler(async (req, res) => {
+    const userId = req.user?._id;
+    const postId = req.params.postId as string;
+
+    if (!postId) {
+        throw new ApiError(400, "Post ID is required");
+    }
+
+    const post = await unarchivePostService(postId, userId);
+
+    res.status(200).json(new ApiResponse(200, post, "Post unarchived successfully"));
 });

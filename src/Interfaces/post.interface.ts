@@ -6,7 +6,7 @@ export interface IPost {
     description: string;
     thumbnail: string;
     content: string[];
-    
+    isArchived: boolean;
     views: number;
     likes: Types.ObjectId[];
     comments: Types.ObjectId[];

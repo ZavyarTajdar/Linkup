@@ -39,8 +39,11 @@ const PostSchema = new Schema<IPost>(
         comments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Comment"
-        }]
-
+        }],
+        isArchived: {
+            type: Boolean,
+            default: false
+        }
     }, 
     { 
         timestamps: true 

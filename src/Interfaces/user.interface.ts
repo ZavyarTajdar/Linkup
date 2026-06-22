@@ -14,6 +14,7 @@ interface IUser {
 
     profileImg: string;
 
+    archivedPost: Types.ObjectId[];
     commentPost: Types.ObjectId[];
     likePost: Types.ObjectId[];
     savedPost: Types.ObjectId[];

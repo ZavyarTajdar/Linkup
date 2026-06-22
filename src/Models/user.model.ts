@@ -143,6 +143,13 @@ const userSchema = new Schema<IUser>(
             default: 0,
         },
 
+        archivedPost: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Post",
+            },
+        ],
+
     },
     { timestamps: true },
 );
