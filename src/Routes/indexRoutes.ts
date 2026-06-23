@@ -12,6 +12,10 @@ routes.use("/user", userRoutes);
 
 routes.use("/post", postRoutes);
 
+// Following Routes
 
 routes.use("/following", followingRoutes )
+
+// 
+
 export default routes;

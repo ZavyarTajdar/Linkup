@@ -36,4 +36,5 @@ router.get('/getfollowing', verifyJWT, getFollowing);
 router.get('/getsuggestedusers', verifyJWT, getSuggestedUsers);
 router.get('/getmutualfollowers/:otherUserId', verifyJWT, getMutualFollowers);
 router.patch('/toggle-profile-privacy', verifyJWT, toggleProfilePrivacy);
+
 export { router as userRoutes };

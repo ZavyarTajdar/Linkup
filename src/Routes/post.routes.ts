@@ -24,4 +24,5 @@ router.get('/getOwnPosts', verifyJWT, getOwnPosts);
 router.delete('/deletePost/:postId', verifyJWT, deletePost);
 router.post('/archivePost/:postId', verifyJWT, archivePost);
 router.post('/unarchivePost/:postId', verifyJWT, unarchivePost);
+
 export { router as postRoutes };
