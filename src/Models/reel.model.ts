@@ -34,6 +34,4 @@ const reelSchema = new Schema<IReel>({
     timestamps: true
 });
 
-const Reel = model<IReel>("Reel", reelSchema);
-
-export default Reel;
+export const Reel = model<IReel>("Reel", reelSchema);

@@ -47,8 +47,6 @@ export const createPostService = async (data: {
         $inc: { postCount: 1 }
     });
 
-    await user.save();
-
     return post;
 };
 
@@ -58,7 +56,7 @@ export const updatePostService = async (
         title?: string;
         description?: string;
     }
-) => {
+ ) => {
     const { title, description } = data;
 
     const post = await Post.findByIdAndUpdate(
@@ -281,3 +279,4 @@ export const unarchivePostService = async (postId: string, userId: string) => {
         session.endSession();
     }
 };
+
