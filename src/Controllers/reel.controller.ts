@@ -1,40 +1,27 @@
 import { asyncHandler } from "../Utils/asyncHandler";
 import { ApiResponse } from "../Utils/apiResponse";
 import { ApiError } from "../Utils/apiError";
-import { Post } from "../Models/post.model";
-import { Types } from "mongoose";
 import { 
-    createReelService, 
-    updateReelService,
+    createReelService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
     const creator = req.user!._id;
     const { caption } = req.body;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const contentPath = files?.content?.[0]?.path;
 
-    if (!req.file?.path) {
+    if (!contentPath) {
         throw new ApiError(400, "Reel content is required");
     }
 
+    const thumbnailPath = files?.thumbnail?.[0]?.path;
     const reel = await createReelService({
         creator,
-        content: req.file.path,
+        content: contentPath,
+        thumbnail: thumbnailPath,
         caption,
     });
 
-    return res.status(201).json(
-        new ApiResponse(201, reel, "Reel created successfully")
-    );
-});
-
-export const updateReel = asyncHandler(async(req, res) => {
-    const reelId = req.params.reelId as string;
-
-    if (!reelId) {
-        throw new ApiError(400, "Post ID is required");
-    }
-
-    const reel = await updateReelService(reelId, req.body);
-
-    res.status(200).json(new ApiResponse(200, reel, "Reel updated successfully"));
+    res.status(201).json(new ApiResponse(201, reel, "Reel created successfully"));
 })

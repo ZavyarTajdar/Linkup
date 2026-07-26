@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface IReel {
     _id: string;
-
+    thumbnail: string;
     creator: Types.ObjectId; // userId of the reel creator
     content: string;
     caption: string;

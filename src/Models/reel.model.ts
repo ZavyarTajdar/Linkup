@@ -11,6 +11,10 @@ const reelSchema = new Schema<IReel>({
         type: String,
         required: true
     },
+    thumbnail: {
+        type: String,
+        required : true        
+    },
     caption: {
         type: String,
         default: function() {

@@ -2,6 +2,7 @@ import { Router } from "express"
 import { userRoutes } from "./user.routes";
 import { postRoutes } from "./post.routes";
 import { followingRoutes } from "./following.routes";
+import { reelRoutes } from "./reel.routes";
 const routes = Router()
 
 // User Routes
@@ -16,6 +17,8 @@ routes.use("/post", postRoutes);
 
 routes.use("/following", followingRoutes )
 
-// 
+// Reel Routes
+
+routes.use("/reel", reelRoutes);
 
 export default routes;
