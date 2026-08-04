@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
     '/createReel',
-    upload.fields([{ name: 'thumbnail', maxCount: 1 }, { name: 'content', maxCount: 1 }]),
+    upload.fields([{ name: 'cover', maxCount: 1 }, { name: 'video', maxCount: 1 }]),
     verifyJWT,
     createReel
 );

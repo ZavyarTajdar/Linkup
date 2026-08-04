@@ -11,16 +11,16 @@ export const createReel = asyncHandler(async (req, res) => {
     const owner = req.user!._id;
     const { caption } = req.body;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    const contentPath = files?.content?.[0]?.path;
+    const videoPath = files?.video?.[0]?.path;
 
-    if (!contentPath) {
+    if (!videoPath) {
         throw new ApiError(400, "Reel content is required");
     }
 
     const coverPath = files?.cover?.[0]?.path;
     const reel = await createReelService({
         owner,
-        video: contentPath,
+        video: videoPath,
         cover: coverPath,
         caption,
     });
