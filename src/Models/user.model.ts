@@ -10,12 +10,13 @@ const userSchema = new Schema<IUser>(
             trim: true,
             required: true
         },
-
         phone: {
             type: String,
             trim: true
         },
-
+        bio: { 
+            type: String 
+        },
         email: {
             type: String,
             required: true,
@@ -23,125 +24,23 @@ const userSchema = new Schema<IUser>(
             trim: true,
             lowercase: true,
         },
-
         username: {
             type: String,
             required: true,
             unique: true,
             trim: true,
         },
-
         password: {
             type: String,
             required: true,
         },
-
         profileImg: {
             type: String,
             default:
                 "https://res.cloudinary.com/dpsofsi0a/image/upload/v1781461217/user-profile-flat-illustration-avatar-person-icon-gender-neutral-silhouette-profile-picture-free-vector_qudxco.jpg",
         },
 
-        commentPost: [
-            {
-                type: String,
-            },
-        ],
-
-        likePost: [
-            {
-                type: String,
-            },
-        ],
-
-        savedPost: [
-            {
-                type: String,
-            },
-        ],
-
-        refreshToken: {
-            type: String,
-        },
-
-        role: {
-            type: String,
-            enum: ["admin", "creator", "user"],
-            default: "user",
-        },
-
-        post: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Post",
-            },
-        ],
-
-        postsCount: {
-            type: Number,
-            default: 0,
-        },
-
-        followers: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        }],
-
-        followings: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        }],
-
-        followRequests: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            },
-        ],
-
-        sentFollowRequests: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            },
-        ],
-
-        isBlocked: {
-            type: Boolean,
-            default: false,
-        },
-
-        profilePrivacy: {
-            type: String,
-            enum: ["public", "private"],
-            default: "private",
-        },
-
-        followersCount: {
-            type: Number,
-            default: 0,
-        },
-
-        isVerified: { 
-            type: Boolean, 
-            default: false 
-        },
-
-        bio: { 
-            type: String 
-        },
-
-        blockedUsers: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            },
-        ],
-
-        followingsCount: {
-            type: Number,
-            default: 0,
-        },
+        // ***
 
         archivedPost: [
             {
@@ -149,7 +48,94 @@ const userSchema = new Schema<IUser>(
                 ref: "Post",
             },
         ],
+        commentPost: [
+            {
+                type: String,
+            },
+        ],
+        likePost: [
+            {
+                type: String,
+            },
+        ],
+        savedPost: [
+            {
+                type: String,
+            },
+        ],
+        followers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
+        followings: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
+        followRequests: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+        sentFollowRequests: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+        blockedUsers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
 
+        // ****
+
+        isBlocked: {
+            type: Boolean,
+            default: false,
+        },
+        isVerified: { 
+            type: Boolean, 
+            default: false 
+        },
+        profilePrivacy: {
+            type: String,
+            enum: ["public", "private"],
+            default: "private",
+        },
+        followersCount: {
+            type: Number,
+            default: 0,
+        },
+        followingsCount: {
+            type: Number,
+            default: 0,
+        },
+        postsCount: {
+            type: Number,
+            default: 0,
+        },
+
+        // ****
+
+        refreshToken: {
+            type: String,
+        },
+        role: {
+            type: String,
+            enum: ["admin", "creator", "user"],
+            default: "user",
+        },
+        post: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Post",
+            },
+        ],
+
+        
     },
     { timestamps: true },
 );

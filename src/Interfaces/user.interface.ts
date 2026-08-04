@@ -6,12 +6,9 @@ interface IUser {
     nickname: string;
     phone?: string;
     bio?: string;
-
     email: string;
     username: string;
-
-    password?: string; // optional now
-
+    password: string; 
     profileImg: string;
 
     archivedPost: Types.ObjectId[];
