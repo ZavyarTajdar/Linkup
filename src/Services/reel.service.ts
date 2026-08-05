@@ -87,3 +87,32 @@ export const getAllFollowingReelsService = async(userId: string) => {
     const reels = await Reel.find({ owner: { $in: user.followings } }).populate("owner", "username nickname followersCount");
     return reels;
 }
+
+export const getReelByIdService = async(reelId: string) => {
+    const reel = await Reel.findById(reelId).populate("owner", "username nickname followersCount");
+    
+    if(!reel){
+        throw new ApiError(404, "Reel Does Not Exist")
+    }
+    return reel;
+}
+
+export const updateReelService = async(reelId: string, data: {
+    caption?: string;
+    cover?: string;
+}) => {
+    const reel = await Reel.findByIdAndUpdate(reelId, data, { new: true }).populate("owner", "username nickname followersCount");
+    if(!reel){
+        throw new ApiError(404, "Reel Does Not Exist")
+    }
+    return reel;
+}   
+
+export const deleteReelService = async(reelId: string) => {
+    const reel = await Reel.findByIdAndDelete(reelId);
+    if(!reel){
+        throw new ApiError(404, "Reel Does Not Exist")
+    }
+    return reel;
+}
+

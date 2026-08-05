@@ -5,6 +5,9 @@ import {
     createReelService,
     getAllCreatorReelsService,
     getAllFollowingReelsService,
+    getReelByIdService,
+    updateReelService,
+    deleteReelService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -44,17 +47,21 @@ export const getAllFollowingReels = asyncHandler(async (req, res) => {
 
 export const getReelById = asyncHandler(async (req, res) => {
     const { reelId } = req.params;
-    // TODO: Get single reel by ID
+    const reel = await getReelByIdService(reelId as string);
+    res.status(200).json(new ApiResponse(200, reel, "Reel fetched successfully"));
 });
 
 export const updateReel = asyncHandler(async (req, res) => {
     const { reelId } = req.params;
-    // TODO: Update reel caption and/or thumbnail
+    const { caption, cover } = req.body;
+    const reel = await updateReelService(reelId as string, { caption, cover });
+    res.status(200).json(new ApiResponse(200, reel, "Reel updated successfully"));
 });
 
 export const deleteReel = asyncHandler(async (req, res) => {
     const { reelId } = req.params;
-    // TODO: Delete reel
+    const reel = await deleteReelService(reelId as string);
+    res.status(200).json(new ApiResponse(200, reel, "Reel deleted successfully"));
 });
 
 export const toggleLikeReel = asyncHandler(async (req, res) => {
