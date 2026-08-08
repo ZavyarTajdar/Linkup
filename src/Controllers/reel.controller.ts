@@ -8,6 +8,7 @@ import {
     getReelByIdService,
     updateReelService,
     deleteReelService,
+    toggleLikeReelService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -66,7 +67,10 @@ export const deleteReel = asyncHandler(async (req, res) => {
 
 export const toggleLikeReel = asyncHandler(async (req, res) => {
     const { reelId } = req.params;
-    // TODO: Like or unlike reel
+    const userId = req.user?._id;
+
+    const { reel, isLiked } = await toggleLikeReelService(reelId as string, userId);
+    res.status(200).json(new ApiResponse(200, { reel, isLiked }, "Reel liked/unliked successfully"));
 });
 
 export const toggleSaveReel = asyncHandler(async (req, res) => {

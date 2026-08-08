@@ -50,17 +50,20 @@ const userSchema = new Schema<IUser>(
         ],
         commentPost: [
             {
-                type: String,
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Comment",
             },
         ],
         likePost: [
             {
-                type: String,
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Like",
             },
         ],
         savedPost: [
             {
-                type: String,
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Saved",
             },
         ],
         followers: [{
