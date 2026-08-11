@@ -88,12 +88,31 @@ export const getAllFollowingReelsService = async(userId: string) => {
     return reels;
 }
 
-export const getReelByIdService = async(reelId: string) => {
+export const getReelByIdService = async(userId : string , reelId: string) => {
     const reel = await Reel.findById(reelId).populate("owner", "username nickname followersCount");
-    
-    if(!reel){
-        throw new ApiError(404, "Reel Does Not Exist")
+
+    if (!reel) {
+        throw new ApiError(404, "Reel Does Not Exist!");
     }
+    
+    const owner = reel.owner as any;
+
+    const isOwner = owner._id.equals(userId);
+
+    const isFollower = owner.followers.some((id: any) =>
+        id.equals(userId)
+    );
+
+    if (owner.profilePrivacy === "private" && !isOwner && !isFollower) {
+        throw new ApiError(403, "Only followers can view this post!");
+    }   
+    // Increment the view count
+    const updatedreel = await Reel.findByIdAndUpdate(
+        reelId,
+        { $inc: { views: 1 } },
+        { returnDocument: "after" }
+    ).populate("owner", "username nickname profileImg profilePrivacy followers");
+
     return reel;
 }
 

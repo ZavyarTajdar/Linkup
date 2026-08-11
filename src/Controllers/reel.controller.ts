@@ -48,7 +48,8 @@ export const getAllFollowingReels = asyncHandler(async (req, res) => {
 
 export const getReelById = asyncHandler(async (req, res) => {
     const { reelId } = req.params;
-    const reel = await getReelByIdService(reelId as string);
+    const userId = req.user?._id
+    const reel = await getReelByIdService(userId as string , reelId as string);
     res.status(200).json(new ApiResponse(200, reel, "Reel fetched successfully"));
 });
 
@@ -73,10 +74,10 @@ export const toggleLikeReel = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, { reel, isLiked }, "Reel liked/unliked successfully"));
 });
 
-export const toggleSaveReel = asyncHandler(async (req, res) => {
-    const { reelId } = req.params;
-    // TODO: Save or unsave reel
-});
+// export const toggleSaveReel = asyncHandler(async (req, res) => {
+//     const { reelId } = req.params;
+//     // TODO: Save or unsave reel
+// }); saved contrller mei ayega
 
 export const addViewToReel = asyncHandler(async (req, res) => {
     const { reelId } = req.params;
