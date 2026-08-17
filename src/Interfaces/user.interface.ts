@@ -31,6 +31,7 @@ interface IUser {
     refreshToken?: string;
     role: string;
     post: Types.ObjectId[];
+    reel : Types.ObjectId[];
 
     createdAt: Date;
     updatedAt: Date;

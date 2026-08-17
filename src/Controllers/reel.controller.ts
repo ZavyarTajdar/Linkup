@@ -9,6 +9,7 @@ import {
     updateReelService,
     deleteReelService,
     toggleLikeReelService,
+    getUserReelsService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -79,14 +80,18 @@ export const toggleLikeReel = asyncHandler(async (req, res) => {
 //     // TODO: Save or unsave reel
 // }); saved contrller mei ayega
 
-export const addViewToReel = asyncHandler(async (req, res) => {
-    const { reelId } = req.params;
-    // TODO: Increase reel view count
-});
-
 export const getUserReels = asyncHandler(async (req, res) => {
     const { userId } = req.params;
-    // TODO: Get all reels of a specific user
+
+    const reels = await getUserReelsService(userId as string);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            reels,
+            "User reels fetched successfully",
+        )
+    );
 });
 
 export const getFollowingReels = asyncHandler(async (req, res) => {

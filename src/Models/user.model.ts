@@ -137,7 +137,12 @@ const userSchema = new Schema<IUser>(
                 ref: "Post",
             },
         ],
-
+        reel:[
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Reel",
+            },
+        ],
         
     },
     { timestamps: true },

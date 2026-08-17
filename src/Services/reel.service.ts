@@ -159,3 +159,15 @@ export const toggleLikeReelService = async(reelId: string, userId: string) => {
         isLiked
     };
 }
+
+export const getUserReelsService = async (userId: string) => {
+
+    const user = await User.findById(userId)
+        .populate("reel", "_id video cover caption likesCount commentsCount savesCount viewsCount sharesCount createdAt");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return user;
+};
