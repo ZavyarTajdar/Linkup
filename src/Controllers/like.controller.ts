@@ -15,7 +15,6 @@ export const toggleLikeReel = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, { reel, isLiked }, "Reel liked/unliked successfully"));
 });
 
-
 export const toggleLikePost = asyncHandler(async (req, res) => {
     const { postId } = req.params;
     const userId = req.user?._id;
