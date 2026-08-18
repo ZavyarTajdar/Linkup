@@ -24,11 +24,17 @@ export const createReelService = async(data: {
     }
 
     const reel = await Reel.create({
-        owner,
+        owner: user._id,
         caption,
         cover: uploadedCover?.url || uploadVideo.url,
         video: uploadVideo.url,
     });
+
+    await User.updateOne(
+        { _id: user._id },
+        { $push: { reel: reel._id } }
+    );
+
     return reel;
 }
 
@@ -171,3 +177,21 @@ export const getUserReelsService = async (userId: string) => {
 
     return user;
 };
+
+export const getFollowingReelsService = async (userId: string) => {
+    const user = await User.findById(userId).select("followings");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    if (!user.followings.length) {
+        return [];
+    }
+
+    const reels = await Reel.find({ owner: { $in: user.followings } })
+        .sort({ createdAt: -1 })
+        .populate("owner", "username nickname profileImg followersCount");
+
+    return reels;
+}

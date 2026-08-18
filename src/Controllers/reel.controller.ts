@@ -10,6 +10,7 @@ import {
     deleteReelService,
     toggleLikeReelService,
     getUserReelsService,
+    getFollowingReelsService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -95,16 +96,24 @@ export const getUserReels = asyncHandler(async (req, res) => {
 });
 
 export const getFollowingReels = asyncHandler(async (req, res) => {
-    // TODO: Get reels from users that the logged-in user follows
+    const userId = req.user?._id;
+
+    if (!userId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const reels = await getFollowingReelsService(userId);
+
+    res.status(200).json(new ApiResponse(200, reels, "Following reels fetched successfully"));
 });
 
-export const getSavedReels = asyncHandler(async (req, res) => {
-    // TODO: Get all saved reels of logged-in user
-});
+// export const getSavedReels = asyncHandler(async (req, res) => {
+//     // TODO: Get all saved reels of logged-in user
+// });
 
-export const getLikedReels = asyncHandler(async (req, res) => {
-    // TODO: Get all liked reels of logged-in user
-});
+// export const getLikedReels = asyncHandler(async (req, res) => {
+//     // TODO: Get all liked reels of logged-in user
+// });
 
 export const getTrendingReels = asyncHandler(async (req, res) => {
     // TODO: Get trending reels based on views and engagement
