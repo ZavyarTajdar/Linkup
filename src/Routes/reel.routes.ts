@@ -1,4 +1,4 @@
-import { createReel, deleteReel, getReelById, updateReel, getAllCreatorReels, getFollowingReels } from "../Controllers/reel.controller";
+import { createReel, deleteReel, getReelById, updateReel, getAllCreatorReels, getFollowingReels, getTrendingReels } from "../Controllers/reel.controller";
 import { Router } from "express";
 import { upload } from "../Middleware/multer.middleware";
 import { verifyJWT } from "../Middleware/auth.middleware";
@@ -39,6 +39,12 @@ router.get(
     '/getFollowingReels',
     verifyJWT,
     getFollowingReels
+)
+
+router.get(
+    '/getTrendingReels',
+    verifyJWT,
+    getTrendingReels
 )
 
 export { router as reelRoutes };

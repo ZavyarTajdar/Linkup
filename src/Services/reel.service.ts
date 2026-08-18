@@ -195,3 +195,72 @@ export const getFollowingReelsService = async (userId: string) => {
 
     return reels;
 }
+
+export const getTrendingReelsService = async (userId: string) => {
+    const user = await User.findById(userId).select("followings blockedUsers");
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const reels = await Reel.aggregate([
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner"
+            }
+        },
+        { $unwind: "$owner" },
+        {
+            $match: {
+                "owner._id": {
+                    $nin: [...user.blockedUsers, new mongoose.Types.ObjectId(userId)]
+                },
+                $or: [
+                    { "owner.profilePrivacy": "public" },
+                    { "owner._id": { $in: user.followings } },
+                    { "owner._id": new mongoose.Types.ObjectId(userId) }
+                ]
+            }
+        },
+        {
+            $addFields: {
+                trendingScore: {
+                    $add: [
+                        "$viewsCount",
+                        { $multiply: ["$likesCount", 3] },
+                        { $multiply: ["$commentsCount", 5] },
+                        { $multiply: ["$sharesCount", 4] },
+                        { $multiply: ["$savesCount", 2] }
+                    ]
+                }
+            }
+        },
+        { $sort: { trendingScore: -1, createdAt: -1 } },
+        {
+            $project: {
+                caption: 1,
+                cover: 1,
+                video: 1,
+                likesCount: 1,
+                commentsCount: 1,
+                savesCount: 1,
+                viewsCount: 1,
+                sharesCount: 1,
+                trendingScore: 1,
+                createdAt: 1,
+                owner: {
+                    _id: "$owner._id",
+                    username: "$owner.username",
+                    nickname: "$owner.nickname",
+                    profileImg: "$owner.profileImg",
+                    followersCount: "$owner.followersCount"
+                }
+            }
+        }
+    ]);
+
+    return reels;
+}

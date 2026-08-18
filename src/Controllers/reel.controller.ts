@@ -11,6 +11,7 @@ import {
     toggleLikeReelService,
     getUserReelsService,
     getFollowingReelsService,
+    getTrendingReelsService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -116,5 +117,13 @@ export const getFollowingReels = asyncHandler(async (req, res) => {
 // });
 
 export const getTrendingReels = asyncHandler(async (req, res) => {
-    // TODO: Get trending reels based on views and engagement
+    const userId = req.user?._id;
+
+    if (!userId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const reels = await getTrendingReelsService(userId);
+
+    res.status(200).json(new ApiResponse(200, reels, "Trending reels fetched successfully"));
 });
