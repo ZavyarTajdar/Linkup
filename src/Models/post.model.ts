@@ -43,6 +43,30 @@ const PostSchema = new Schema<IPost>(
         isArchived: {
             type: Boolean,
             default: false
+        },
+        likesCount: {
+            type: Number,
+            default: 0
+        },
+    
+        commentsCount: {
+            type: Number,
+            default: 0
+        },
+    
+        savesCount: {
+            type: Number,
+            default: 0
+        },
+    
+        viewsCount: {
+            type: Number,
+            default: 0
+        },
+    
+        sharesCount: {
+            type: Number,
+            default: 0
         }
     }, 
     { 

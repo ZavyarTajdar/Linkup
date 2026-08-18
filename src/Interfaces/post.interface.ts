@@ -11,6 +11,12 @@ export interface IPost {
     likes: Types.ObjectId[];
     comments: Types.ObjectId[];
 
+    likesCount: number;
+    commentsCount: number;
+    savesCount: number;
+    viewsCount: number;
+    sharesCount: number;
+
     createdAt: Date;
     updatedAt: Date;
 }
