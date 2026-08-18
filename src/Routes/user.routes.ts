@@ -30,7 +30,7 @@ router.get('/profile', verifyJWT, getUserProfile);
 router.post('/refresh-token', verifyJWT,refreshAccessToken);
 router.delete('/delete-account', verifyJWT, deleteUserAccount);
 router.get('/searchUser', verifyJWT, searchUser);
-router.get('/getUserbyId/:requestedUserId', verifyJWT, getUserbyId);
+router.get('/getUserbyId/:requestedUserId', verifyJWT, getUserbyId); 
 router.get('/getfollowers', verifyJWT, getFollowers);
 router.get('/getfollowing', verifyJWT, getFollowing);
 router.get('/getsuggestedusers', verifyJWT, getSuggestedUsers);
