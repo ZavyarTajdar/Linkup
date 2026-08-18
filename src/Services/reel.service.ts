@@ -264,3 +264,13 @@ export const getTrendingReelsService = async (userId: string) => {
 
     return reels;
 }
+
+/*
+------------------- getTrendingReelsService Logic---------------------:
+1. Get user's followings and blocked users.
+2. Join each reel with its owner's user data using $lookup.
+3. Exclude blocked users and filter reels to allow public profiles or followed users.
+4. Calculate a trending score using views, likes, comments, shares, and saves with different weights.
+5. Sort reels by highest trending score, then by newest createdAt.
+6. Return only the required reel and owner fields.
+*/
