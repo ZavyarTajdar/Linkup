@@ -51,19 +51,25 @@ const userSchema = new Schema<IUser>(
         commentPost: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Comment",
+                ref: "Post",
             },
         ],
         likePost: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Like",
+                ref: "Post",
+            },
+        ],
+        likeReel: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Reel",
             },
         ],
         savedPost: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Saved",
+                ref: "Post",
             },
         ],
         followers: [{

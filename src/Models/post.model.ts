@@ -32,9 +32,9 @@ const PostSchema = new Schema<IPost>(
             type: Number,
             default: 0
         },
-        likes: [{
+        likedBy: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Like"
+            ref: "User"
         }],
         comments: [{
             type: mongoose.Schema.Types.ObjectId,
@@ -67,6 +67,10 @@ const PostSchema = new Schema<IPost>(
         sharesCount: {
             type: Number,
             default: 0
+        },
+        isLiked: {
+            type: Boolean,
+            default: false
         }
     }, 
     { 

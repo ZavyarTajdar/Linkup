@@ -1,4 +1,3 @@
-import { Like } from "../Models/like.model";
 import { User } from "../Models/user.model";
 import { Post } from "../Models/post.model";
 import { ApiError } from "../Utils/apiError";
@@ -14,19 +13,23 @@ export const toggleLikeReelService = async(reelId: string, userId: string) => {
     if(!user){
         throw new ApiError(404, "User Not Found")
     }
-    const isLiked = reel.likes.includes(new mongoose.Types.ObjectId(userId));
-    if(isLiked){
-        reel.likes = reel.likes.filter((id) => id.toString() !== new mongoose.Types.ObjectId(userId).toString());
+    const existingLike = reel.likedBy.includes(new mongoose.Types.ObjectId(userId));
+    if(existingLike){
+        reel.likedBy = reel.likedBy.filter((id) => id.toString() !== new mongoose.Types.ObjectId(userId).toString());
         reel.likesCount--;
-        
+        user.likeReel = user.likeReel.filter(
+            (id) => id.toString() !== reelId
+        );
     } else {
-        reel.likes.push(new mongoose.Types.ObjectId(userId));
+        reel.likedBy.push(new mongoose.Types.ObjectId(userId));
         reel.likesCount++;
+        user.likeReel.push(new mongoose.Types.ObjectId(reelId));
     }
     await reel.save();
+    await user.save();
     return {
         reel,
-        isLiked
+        isLiked: !existingLike
     };
 }
 
@@ -41,33 +44,24 @@ export const toggleLikePostService = async (postId: string, userId: string) => {
         throw new ApiError(404, "User Not Found");
     }
 
-    const existingLike = await Like.findOne({ post: postId, likedby: userId });
+    const existingLike = post.likedBy.includes(new mongoose.Types.ObjectId(userId));
 
     if (existingLike) {
-        await Like.findByIdAndDelete(existingLike._id);
-    
-        post.likes = post.likes.filter(
-            (likeId) => likeId.toString() !== existingLike._id.toString()
-        );
-    
+        post.likedBy = post.likedBy.filter((id) => id.toString() !== new mongoose.Types.ObjectId(userId).toString());
+        post.likesCount--;
         user.likePost = user.likePost.filter(
-            (likeId) => likeId.toString() !== existingLike._id.toString()
+            (id) => id.toString() !== postId
         );
-    
-        await Promise.all([
-            post.save(),
-            user.save()
-        ]);
-    
-        return {
-            post,
-            isLiked: false
-        };
+    }else {
+        post.likedBy.push(new mongoose.Types.ObjectId(userId));
+        post.likesCount++;
+        user.likePost.push(new mongoose.Types.ObjectId(postId));
     }
-    const like = await Like.create({ post: postId, likedby: userId });
-    post.likes.push(like._id);
-    user.likePost.push(like._id);
-    await Promise.all([post.save(), user.save()]);
-
-    return { post, isLiked: true };
+    await post.save();
+    await user.save();
+    return {
+        post,
+        isLiked: !existingLike
+    };
 };
+

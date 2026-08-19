@@ -7,7 +7,7 @@ export interface IReel {
     owner: Types.ObjectId; // userId of the reel owner
     video: string;
     caption: string;
-    likes: Types.ObjectId[]; // list of users who have liked the reel
+    likedBy: Types.ObjectId[]; // list of users who have liked the reel
     comments: Types.ObjectId[]; // list of comment IDs associated with the reel
 
     likesCount: number;
@@ -15,7 +15,7 @@ export interface IReel {
     savesCount: number;
     viewsCount: number;
     sharesCount: number;
-    
+    isLiked:boolean;     
     createdAt: Date;
     updatedAt: Date;
 }

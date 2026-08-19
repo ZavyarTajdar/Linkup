@@ -27,9 +27,9 @@ const reelSchema = new Schema<IReel>({
         }
     },
 
-    likes: [{
+    likedBy: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Like"
+        ref: "User"
     }],
 
     comments: [{
@@ -60,6 +60,10 @@ const reelSchema = new Schema<IReel>({
     sharesCount: {
         type: Number,
         default: 0
+    },
+    isLiked: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true });

@@ -14,6 +14,7 @@ interface IUser {
     archivedPost: Types.ObjectId[];
     commentPost: Types.ObjectId[];
     likePost: Types.ObjectId[];
+    likeReel: Types.ObjectId[];
     savedPost: Types.ObjectId[];
     followers: Types.ObjectId[];
     followings: Types.ObjectId[];

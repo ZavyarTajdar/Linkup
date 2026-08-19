@@ -8,7 +8,7 @@ export interface IPost {
     content: string[];
     isArchived: boolean;
     views: number;
-    likes: Types.ObjectId[];
+    likedBy: Types.ObjectId[];
     comments: Types.ObjectId[];
 
     likesCount: number;
@@ -16,6 +16,7 @@ export interface IPost {
     savesCount: number;
     viewsCount: number;
     sharesCount: number;
+    isLiked:boolean;
 
     createdAt: Date;
     updatedAt: Date;
