@@ -28,7 +28,6 @@ export const toggleLikeReelService = async(reelId: string, userId: string) => {
     await reel.save();
     await user.save();
     return {
-        reel,
         isLiked: !existingLike
     };
 }
@@ -60,8 +59,16 @@ export const toggleLikePostService = async (postId: string, userId: string) => {
     await post.save();
     await user.save();
     return {
-        post,
         isLiked: !existingLike
     };
 };
 
+export const getOwnlikedContentService = async (userId:string) => {
+    const user = await User.findById(userId).select('likePost likeReel')
+
+    if (!user) {
+        throw new ApiError(404, "User not exist")
+    }
+
+    return user;
+}
