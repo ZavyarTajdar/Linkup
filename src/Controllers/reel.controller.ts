@@ -105,10 +105,6 @@ export const getFollowingReels = asyncHandler(async (req, res) => {
 //     // TODO: Get all saved reels of logged-in user
 // });
 
-// export const getLikedReels = asyncHandler(async (req, res) => {
-//     // TODO: Get all liked reels of logged-in user
-// });
-
 export const getTrendingReels = asyncHandler(async (req, res) => {
     const userId = req.user?._id;
 
