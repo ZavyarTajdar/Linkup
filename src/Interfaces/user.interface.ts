@@ -15,7 +15,7 @@ interface IUser {
     commentPost: Types.ObjectId[];
     likePost: Types.ObjectId[];
     likeReel: Types.ObjectId[];
-    savedPost: Types.ObjectId[];
+    savedContent: Types.ObjectId;
     followers: Types.ObjectId[];
     followings: Types.ObjectId[];
     followRequests: Types.ObjectId[]        // incoming requests

@@ -1,5 +1,5 @@
 import mongoose, {model, Schema} from "mongoose";
-import {ISaved} from "../Interfaces/saved.interface";
+import { ISaved } from "../Interfaces/saved.interface";
 
 const savedSchema: Schema = new Schema<ISaved>({
     userId: {
@@ -19,4 +19,4 @@ const savedSchema: Schema = new Schema<ISaved>({
 
 const Saved = model<ISaved>('Saved', savedSchema);
 
-export default Saved;
+export { Saved };

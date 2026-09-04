@@ -66,12 +66,10 @@ const userSchema = new Schema<IUser>(
                 ref: "Reel",
             },
         ],
-        savedPost: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Post",
-            },
-        ],
+        savedContent:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Saved",
+        },
         followers: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
