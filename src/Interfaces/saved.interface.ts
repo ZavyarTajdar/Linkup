@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface ISaved {
     _id: string;
-    
+    collectionName: string;
     postId: Types.ObjectId[];
     reelId: Types.ObjectId[];
     userId: Types.ObjectId;

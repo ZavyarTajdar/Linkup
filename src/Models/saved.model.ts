@@ -2,6 +2,10 @@ import mongoose, {model, Schema} from "mongoose";
 import { ISaved } from "../Interfaces/saved.interface";
 
 const savedSchema: Schema = new Schema<ISaved>({
+    collectionName: {
+        type: String,
+        required: true
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
