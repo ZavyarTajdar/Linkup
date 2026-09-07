@@ -147,3 +147,23 @@ export const getSavedContentByUserIdService = async (
     }).populate("postId reelId");
     return saved;
 };
+
+export const deleteSavedCollectionByNameService = async (
+    userId: string,
+    collectionName: string
+) => {
+    
+    const deletedCollection = await Saved.findOneAndDelete({
+        collectionName,
+        userId: new Types.ObjectId(userId),
+    });
+
+    if (!deletedCollection) {
+        throw new ApiError(
+            404,
+            "Collection not found or you are not the owner"
+        );
+    }
+
+    return deletedCollection;
+};
