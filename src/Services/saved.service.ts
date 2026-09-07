@@ -112,3 +112,38 @@ export const unsaveContentService = async (
 
     await saved.save();
 };
+
+export const getSavedContentService = async (
+    userId: string,
+    collectionName: string
+) => {
+    const saved = await Saved.find({
+        userId,
+        collectionName
+    }).populate("postId reelId");
+
+    return saved;
+};
+
+export const getSavedCollectionByNameService = async (
+    userId: string,
+    collectionName: string,
+) => {
+    const saved = await Saved.findOne({
+        userId,
+        collectionName,
+    }).populate("postId reelId");
+    if (!saved) {
+        throw new ApiError(404, "Saved content not found");
+    }
+    return saved;
+};
+
+export const getSavedContentByUserIdService = async (
+    userId: string
+) => {
+    const saved = await Saved.find({
+        userId
+    }).populate("postId reelId");
+    return saved;
+};
