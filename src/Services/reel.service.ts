@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { Reel } from "../Models/reel.model";
 import { User } from "../Models/user.model";
 import { ApiError } from "../Utils/apiError";
+import Comment from "../Models/comment.model"
 import { UploadOnCloudinary } from "../Utils/cloudinary";
 import mongoose from "mongoose";
 
@@ -249,3 +250,30 @@ export const getTrendingReelsService = async (userId: string) => {
 5. Sort reels by highest trending score, then by newest createdAt.
 6. Return only the required reel and owner fields.
 */
+
+export const postCommentService = async(contentId: string, contentType: "reel" | "post" | "story", message: string, author: string) => {
+    const commentator = await User.findById(author)
+
+    if (!commentator) {
+        throw new ApiError(404, "Commentator Not Found")
+    }
+
+    const content = await Reel.findById(contentId)
+    if (!content) {
+        throw new ApiError(404, " Content Not Found! ")
+    }
+
+    const createComment = await Comment.create({
+        author: commentator._id,
+        message,
+        contentType,
+        contentId
+    })
+    if (!createComment) {
+        throw new ApiError(400, "Failed to create comment")
+    }
+
+    await Reel.findByIdAndUpdate(contentId, { $inc: { commentsCount: 1 } })
+
+    return createComment;
+}

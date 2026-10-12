@@ -11,6 +11,7 @@ import {
     getUserReelsService,
     getFollowingReelsService,
     getTrendingReelsService,
+    postCommentService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -68,13 +69,6 @@ export const deleteReel = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, reel, "Reel deleted successfully"));
 });
 
-
-
-// export const toggleSaveReel = asyncHandler(async (req, res) => {
-//     const { reelId } = req.params;
-//     // TODO: Save or unsave reel
-// }); saved contrller mei ayega
-
 export const getUserReels = asyncHandler(async (req, res) => {
     const { userId } = req.params;
 
@@ -101,10 +95,6 @@ export const getFollowingReels = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, reels, "Following reels fetched successfully"));
 });
 
-// export const getSavedReels = asyncHandler(async (req, res) => {
-//     // TODO: Get all saved reels of logged-in user
-// });
-
 export const getTrendingReels = asyncHandler(async (req, res) => {
     const userId = req.user?._id;
 
@@ -116,3 +106,26 @@ export const getTrendingReels = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, reels, "Trending reels fetched successfully"));
 });
+
+export const postComment = asyncHandler(async(req, res) => {
+    const { contentId } = req.params
+    
+    const { contentType, message } = req.body
+    
+    const { author } = req.user?._id
+    if (!contentId) {
+        throw new ApiError(404, "Content Id is required")
+    }
+
+    if(!contentType) {
+        throw new ApiError(404, "Content Type Is Necessary")
+    }
+
+    if (!message) {
+        throw new ApiError(404, " Message is required! ")
+    }
+
+    const comment = await postCommentService(contentId as string, contentType as "reel" | "post" | "story", message, author as string)
+
+    res.status(201).json(new ApiResponse(201, comment, "Comment created successfully"));
+})

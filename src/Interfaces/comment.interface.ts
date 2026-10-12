@@ -3,9 +3,11 @@ import { Types } from "mongoose";
 export interface IComment {
     _id: string;
     author: Types.ObjectId; // userId of the comment author
-    post: Types.ObjectId;
-    reel: Types.ObjectId;
-    story: Types.ObjectId;
+    message: string;
+    likesCount: number;
+    replies: Types.ObjectId[];
+    contentType : "reel" | "post" | "story";
+    contentId : string;
     createdAt: Date;
     updatedAt: Date;
 }

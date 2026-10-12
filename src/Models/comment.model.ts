@@ -7,17 +7,24 @@ const commentSchema = new Schema<IComment>({
         ref: "User", 
         required: true 
     },
-    post: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Post" 
+    message: {
+        type: String,
+        required: true
     },
-    reel: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Reel" 
+    likesCount: {
+        type: Number,
+        default: 0
     },
-    story: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Story" 
+    replies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
+    }],
+    contentType : {
+        type : String,
+        enum: ["reel", "post", "story"],
+    },
+    contentId : {
+        type : String,
     }
 }, {
     timestamps: true
