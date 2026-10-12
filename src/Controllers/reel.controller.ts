@@ -11,7 +11,8 @@ import {
     getUserReelsService,
     getFollowingReelsService,
     getTrendingReelsService,
-    postCommentService,
+    reelCommentService,
+    editReelCommentService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -107,7 +108,7 @@ export const getTrendingReels = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, reels, "Trending reels fetched successfully"));
 });
 
-export const postComment = asyncHandler(async(req, res) => {
+export const reelComment = asyncHandler(async(req, res) => {
     const { contentId } = req.params
     
     const { contentType, message } = req.body
@@ -125,7 +126,30 @@ export const postComment = asyncHandler(async(req, res) => {
         throw new ApiError(404, " Message is required! ")
     }
 
-    const comment = await postCommentService(contentId as string, contentType as "reel" | "post" | "story", message, author as string)
+    const comment = await reelCommentService(contentId as string, contentType as "reel" | "post" | "story", message, author as string)
 
     res.status(201).json(new ApiResponse(201, comment, "Comment created successfully"));
 })
+
+
+export const editReelComment = asyncHandler(async (req, res) => {
+    const { commentId } = req.params;
+    const { message } = req.body;
+
+    if (!message?.trim()) {
+        throw new ApiError(400, "Message cannot be empty");
+    }
+
+    const updatedComment = await editReelCommentService(
+        commentId as string,
+        message
+    );
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            updatedComment,
+            "Comment updated successfully"
+        )
+    );
+});

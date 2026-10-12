@@ -25,6 +25,9 @@ const commentSchema = new Schema<IComment>({
     },
     contentId : {
         type : String,
+    },
+    edited:{
+        type: Boolean
     }
 }, {
     timestamps: true

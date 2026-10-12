@@ -251,7 +251,7 @@ export const getTrendingReelsService = async (userId: string) => {
 6. Return only the required reel and owner fields.
 */
 
-export const postCommentService = async(contentId: string, contentType: "reel" | "post" | "story", message: string, author: string) => {
+export const reelCommentService = async(contentId: string, contentType: "reel" | "post" | "story", message: string, author: string) => {
     const commentator = await User.findById(author)
 
     if (!commentator) {
@@ -277,3 +277,49 @@ export const postCommentService = async(contentId: string, contentType: "reel" |
 
     return createComment;
 }
+
+
+export const editReelCommentService = async (
+    commentId: string,
+    message: string
+) => {
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const comment = await Comment.findById(commentId)
+            .session(session);
+
+        if (!comment) {
+            throw new ApiError(404, "Comment not found");
+        }
+
+        // Allow editing only within 15 minutes
+        const fifteenMinutes = 15 * 60 * 1000;
+        const currentTime = Date.now();
+
+        if (
+            currentTime - new Date(comment.createdAt).getTime()
+            > fifteenMinutes
+        ) {
+            throw new ApiError(
+                403,
+                "Comment can only be edited within 15 minutes"
+            );
+        }
+
+        comment.message = message.trim();
+
+        await comment.save({ session });
+
+        await session.commitTransaction();
+
+        return comment;
+    } catch (error) {
+        await session.abortTransaction();
+        throw error;
+    } finally {
+        await session.endSession();
+    }
+};

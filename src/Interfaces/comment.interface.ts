@@ -7,6 +7,7 @@ export interface IComment {
     likesCount: number;
     replies: Types.ObjectId[];
     contentType : "reel" | "post" | "story";
+    edited?: boolean;
     contentId : string;
     createdAt: Date;
     updatedAt: Date;
