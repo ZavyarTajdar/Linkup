@@ -251,7 +251,12 @@ export const getTrendingReelsService = async (userId: string) => {
 6. Return only the required reel and owner fields.
 */
 
-export const reelCommentService = async(contentId: string, contentType: "reel" | "post" | "story", message: string, author: string) => {
+export const reelCommentService = async(
+    contentId: string, 
+    contentType: "reel" | "post" | "story", 
+    message: string, 
+    author: string
+) => {
     const commentator = await User.findById(author)
 
     if (!commentator) {
@@ -323,12 +328,17 @@ export const editReelCommentService = async (
     }
 };
 
-export const deleteReelCommentService = async(commentId: string) => {
-    const comment = await Comment.findByIdAndDelete(commentId)
-
-    if(!comment){
+export const deleteReelCommentService = async(
+    commentId: string,
+    userId: string
+) => {
+    const comment = await Comment.findById(commentId)
+    if (!comment) {
         throw new ApiError(404, "Comment Doesn't Exist !")
     }
-
+    if (!comment.author.equals(userId)) {
+        throw new ApiError(403, "You are not allowed to delete this comment")
+    }
+    await Comment.findByIdAndDelete(commentId);
     return comment
 }

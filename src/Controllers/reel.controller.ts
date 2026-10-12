@@ -156,12 +156,13 @@ export const editReelComment = asyncHandler(async (req, res) => {
 
 export const deleteReelComment = asyncHandler(async(req,res) => {
     const { commentId } = req.params
+    const userId = req.user?._id
 
     if(!commentId){
-        throw new ApiError(404, "Reel Comment Is Necessary")
+        throw new ApiError(404, "Comment Id Is Necessary")
     }
 
-    await deleteReelCommentService(commentId as string)
+    await deleteReelCommentService(commentId as string, userId as string)
 
     return res
     .status(200)
