@@ -13,6 +13,7 @@ import {
     getTrendingReelsService,
     reelCommentService,
     editReelCommentService,
+    deleteReelCommentService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -131,7 +132,6 @@ export const reelComment = asyncHandler(async(req, res) => {
     res.status(201).json(new ApiResponse(201, comment, "Comment created successfully"));
 })
 
-
 export const editReelComment = asyncHandler(async (req, res) => {
     const { commentId } = req.params;
     const { message } = req.body;
@@ -153,3 +153,19 @@ export const editReelComment = asyncHandler(async (req, res) => {
         )
     );
 });
+
+export const deleteReelComment = asyncHandler(async(req,res) => {
+    const { commentId } = req.params
+
+    if(!commentId){
+        throw new ApiError(404, "Reel Comment Is Necessary")
+    }
+
+    await deleteReelCommentService(commentId as string)
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, "Comment Deleted Successfully!")
+    )
+})

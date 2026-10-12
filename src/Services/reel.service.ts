@@ -278,7 +278,6 @@ export const reelCommentService = async(contentId: string, contentType: "reel" |
     return createComment;
 }
 
-
 export const editReelCommentService = async (
     commentId: string,
     message: string
@@ -323,3 +322,13 @@ export const editReelCommentService = async (
         await session.endSession();
     }
 };
+
+export const deleteReelCommentService = async(commentId: string) => {
+    const comment = await Comment.findByIdAndDelete(commentId)
+
+    if(!comment){
+        throw new ApiError(404, "Comment Doesn't Exist !")
+    }
+
+    return comment
+}
