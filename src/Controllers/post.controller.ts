@@ -116,3 +116,17 @@ export const unarchivePost = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, post, "Post unarchived successfully"));
 });
+
+export const createPostComment = asyncHandle(async(req, res) => {
+    const { contentId } = req.params
+    
+    const { contentType, message } = req.body
+    
+    const { author } = req.user?._id
+
+    if (!postId) {
+        throw new ApiError(400, "Post ID is required");
+    }
+
+
+})

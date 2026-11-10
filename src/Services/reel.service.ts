@@ -342,3 +342,22 @@ export const deleteReelCommentService = async(
     await Comment.findByIdAndDelete(commentId);
     return comment
 }
+
+export const getReelCommentsService = async(reelId: string, page: number, limit: number) => {
+    const reel = await Reel.findById(reelId)
+    if (!reel) {
+        throw new ApiError(404, "Reel Not Found")
+    }
+    const comments = await Comment.find({ contentId: reelId, contentType: "reel" })
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .populate("author", "username nickname profileImg")
+    const totalComments = await Comment.countDocuments({ contentId: reelId, contentType: "reel" })
+    const totalPages = Math.ceil(totalComments / limit)
+    return {
+        comments,
+        totalPages,
+        currentPage: page
+    }
+}

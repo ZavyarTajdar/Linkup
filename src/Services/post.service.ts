@@ -280,3 +280,12 @@ export const unarchivePostService = async (postId: string, userId: string) => {
     }
 };
 
+export const createPostCommentService = async(postId: string, userId: string, comment: string) => {
+    const post = await Post.findById(postId)
+
+    if(!post){
+        throw new ApiError(404, 'Post Not Found or does not exist')
+    }
+
+    con
+}

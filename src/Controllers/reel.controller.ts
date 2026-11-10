@@ -14,6 +14,7 @@ import {
     reelCommentService,
     editReelCommentService,
     deleteReelCommentService,
+    getReelCommentsService,
 } from "../Services/reel.service"
 
 export const createReel = asyncHandler(async (req, res) => {
@@ -170,3 +171,23 @@ export const deleteReelComment = asyncHandler(async(req,res) => {
         new ApiResponse(200, "Comment Deleted Successfully!")
     )
 })
+
+export const getReelComments = asyncHandler(async(req,res) => {
+    const { reelId } = req.params
+    const { page, limit } = req.query
+
+    if (!reelId) {
+        throw new ApiError(404, "Reel Id Is Required")
+    }
+    
+    const fetchedComments = await getReelCommentsService(reelId as string, Number(page), Number(limit))
+
+    return res.status(200).json(
+        new ApiResponse(200, fetchedComments, "Comments fetched successfully")
+    )
+})
+
+export const replyToReelComment = asyncHandler(async(req,res) => {
+    const { commentId } = req.params
+})
+
